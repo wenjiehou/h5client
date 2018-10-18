@@ -1,0 +1,1 @@
+var tape=require("tape"),protobuf=require("..");tape.test("common types",function(o){protobuf.common("google/protobuf/foo.proto",{nested:{google:{nested:{protobuf:{nested:{Foo:{fields:{}}}}}}}}),o.ok(protobuf.common["google/protobuf/foo.proto"],"should expose custom definitions"),o.end()});

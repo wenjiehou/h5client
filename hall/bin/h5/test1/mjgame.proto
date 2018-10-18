@@ -1,0 +1,974 @@
+syntax = "proto3"; 
+package mjgame;
+
+
+//-------------------------------------------------------
+// Req 
+message Message {
+	int32 ID   = 1;      // 消息ID
+	bytes MSG  = 2;	  // 消息内容Bytes(Protobuff)
+}
+
+
+//登录信息  MsgID : 100
+message Login {
+	  string SID 		= 1;			//  SessionID
+	  int32 RID 		= 2;			//
+	  float GPS_LNG   	= 3;			//  经度
+	  float GPS_LAT   	= 4;			//  纬度
+	  string openid 	= 5;
+	  string token      = 6;
+}
+
+//房间列表  MsgID : 110
+message Room_List {
+	int32 Type  		= 1;
+	int32 City  		= 2;
+}
+
+//创建房间  MsgID : 120
+message Create_Room {
+	string SID    			= 1;	// 
+	int32  Type   			= 2; 	// 游戏类型(血流, 西周...)	
+	int32  City             = 3;
+	string PWD    			= 4;    // 密码(可为空)
+	repeated int32  Rule  	= 5; 	// 规则ID列表
+}
+
+//规则  MsgID : 130
+message RuleItem {
+	int32 ID  		= 1;	//
+	string Desc 	= 2;	//
+}
+
+//查找房间  MsgID : 140;
+message Find_Room {
+	string SID 		= 1;
+	int32 RID 		= 2;
+}
+
+//解散房间  MsgID : 150
+message Disband_Room {
+	string SID    	= 1; 
+	int32 AGREE   	= 2; //0=反对 1=同意 -1=等待中
+	string PWD 		= 4; //
+}
+
+//房间信息  MsgID : 160
+message Room_Info {
+	int32 RID  	= 1;   		 
+	string PWD 	= 2;	 
+}
+
+//进入房间  MsgID : 170
+message Into_Room {
+	string SID 	= 1;
+	string UID 	= 2;
+	int32 RID  	= 3;
+	string PWD 	= 4;
+}
+
+// 进入自动匹配场  MsgID : 180
+message Into_MatchRoom {
+	string SID    = 1;
+	int32 Type    = 2;    // 类型 (区域ID)
+	int32 Level   = 3;    // 级别
+}
+
+// 退出房间  MsgID : 190
+message ExitRoom {
+	string sid  = 1;
+}
+
+enum Direction {
+	EAST = 0;
+	SOUTH = 1;
+	WEST = 2;
+	NORTH = 3;
+}
+
+//坐下   	MsgID : 195
+message SitDown {
+	string sid  = 1;
+	int32  index = 2;		//位置
+}
+
+//站起来   MsgID : 196
+message StandUp {
+	string sid  = 1;
+	int32  index = 2;
+}
+
+// 用户信息  MsgID : 200
+message User_Info {
+	string UID = 1;
+}
+
+// 玩家准备好了  MsgID : 210
+message UserReady {
+	string sid = 1;
+}
+
+// 玩家座位  MsgID : 215
+message User_Seat {
+	string SID 		= 1;	
+	string Index 		= 2;  //座位号
+}
+
+//开始游戏  MsgID : 220
+message Start_Game {
+	string sid  = 1;
+}
+
+//重新开始游戏 (测试接口)  MsgID : 230
+message Restart_Game {
+	int32 SID  = 1;
+	string PWD =3;
+}
+
+//玩家离开  MsgID : 240
+//message User_Leave  {
+//	string SID = 1;
+//}
+
+//得到当前操作的用户  MsgID : 250
+message Get_CurUser {
+	string UID   = 1;
+	int32 Time  = 3; //剩余操作时间
+}
+
+
+//得到玩家牌的数量  MsgID : 260
+message Get_User_Card_Count {
+	string UID = 1;
+}
+
+//打牌  MsgID : 270
+message Put_Card {
+	string sid   	= 1; //
+	int32 cid  		= 2; // card id
+	int32 ting 		= 3; // >0 听牌
+}
+
+//吃牌  MsgID : 290
+message Chow {
+	 string sid   	= 1;
+	 int32 cid1   	= 2;
+	 int32 cid2   	= 3;
+	 int32 cid3   	= 4;
+	 int32 def_cid  = 5; // 吃过以后的默认手牌
+}
+
+//碰  MsgID : 300
+message Peng {
+	 string sid     	= 1;
+	 int32 cid     		= 2; // 要碰的牌
+	 int32 def_cid  	= 3; // 吃过以后的默认手牌
+}
+
+//杠  MsgID : 310
+message Kong {
+	 string sid  = 1;
+	 int32 cid  = 2;
+}
+
+//听 MsgID : 315
+message Ting {
+	 string SID  = 1;
+	 int32 CID  = 2; 
+}
+
+
+//胡牌  MsgID : 320
+message Win {
+	 string sid = 1;
+	 int32 cid = 2;
+}
+
+// 取消  MsgID : 330
+message Pass {
+	 string SID = 1;
+}
+
+// 救济金  MsgID : 340
+message Benefits {
+	 string SID = 1;
+}
+
+
+// 换三张  MsgID : 350
+message Change3Card {
+	 string SID   = 1;
+	repeated int32 CID = 2;  //3张数组
+}
+
+// 定缺  MsgID : 360
+message FixMiss {
+	 string SID  = 1;
+	 int32 Type = 2;
+}
+
+// 发送消息  MsgID : 370 
+message Chat {
+	string message  = 1; //消息内容
+	int32 type = 2;      //1:语音 2：文字
+}
+
+
+// (预留)发送Json消息 MsgID : 380
+message MessageJson {
+	string SID  	= 1;
+	string JSON  	= 2;
+}
+
+//踢人
+message KickRequest {
+	int32 index = 1; //被踢掉的玩家index
+}
+
+message KickResponse {
+	int32 index = 1; //被踢掉的玩家index
+	string user_id = 2; //被踢掉的玩家user_id
+}
+
+//-------------------------------------------------------
+// ACK 
+//
+
+
+//登录  MsgID : 500
+message ACK_Login {
+	string sid  				= 1;	//    服务器生成唯一 Session ID
+}
+
+
+//用户信息  MsgID : 510
+message ACK_User_Info {
+	 string 		name    	=1;  	// Nick Name
+	 string 		uid    		=2; 	// User ID  用户ID
+	 int32 			room_id    	=3;    	// 房间号
+	 string 		ip     		=4; 	// IP地址
+	 int32 			index  		=5;    	// 房间位置// 0=东  1=北  2=西  3=南
+	 string 		icon  		=6; 	// 头像
+	 int32 			coin   		=7;    	// 金币
+	 int32 			type  		=8;   	// 类型
+	 int32 			diamond		=9;   	// 钻石
+	 int32 			level  		=10;   	// 等级
+	 string 		email  		=11; 	// 邮箱
+	 float  		GPS_LNG		=12;	// 经度 Longitude   简写Lng
+	 float  		GPS_LAT		=13;	// 纬度 Latitude    简写Lat
+	 int32 			robot   	=14;   	// 是否是机器人
+	 int32 			winweek 	=15;    // 本周胜局次数
+	 bool           ready 		=16; 	// 是否准备
+	 int32 			state 		=17;    // 当前用户状态1:在线 2：离线
+	 int32 			sex 		=18;    // 性别 1:男性 2:女性
+	 int32          score 		=19;    // 分数
+	 bool 			can_kick    =20;    // true可以 false不行
+	 int32          offline_time = 21; // 离线倒计时(单位秒)
+}
+
+// 房间信息  MsgID : 520
+message ACK_Room_Info {
+	 int32 room_id   		= 1;
+	 int32 type 			= 2;		// 游戏类型
+	 int32 city 			= 3;
+	 int32 level     		= 4;
+	 repeated int32 rules   = 5; 		// 规则ID
+	 int32 round_count 		= 6;		// 局数
+	 int32 big_round_count  = 7; 		// 圈数(4局为1圈)
+	 int64 start_time 		= 8; 		// 开局时间(time.Now)
+	 int64 round_time		= 9;        // 当前局开始时间
+	 int32 seat_count  		= 10;       // 座位数量
+	 int32 user_count     	= 11; 		// 用户数量
+	 int32 cur_index      	= 12;       // 当前出牌的用户
+	 int32 cur_tool_index  	= 13;       // 当前操作用户
+	 bool  starting 		= 14; 		// 当前游戏是否已经开始 false:未开始 true:已开始
+	 int64 left_time 		= 15; 		// 剩余时间(开局之后的倒计时)
+	 int32 direction 		= 16;       // 方位(0-3)东南西北
+	 int64 disband_left_time = 17;      // (房间未开始，房间开始后字段失效)房间解散倒计时
+	 string nick_name 	    = 18;       // 当前开局着昵称(游戏未开始时使用，没有为空)
+     string unique_code     = 19;       // 房间唯一性标识
+}
+
+// 房间中的用户信息  MsgID : 525
+message ACK_Room_User {
+    int32 RID   			= 1;
+	repeated ACK_User_Info Users 	= 2;     // 房间用户信息, 按照Index顺序
+}
+
+//房间列表 (自动匹配场)  MsgID : 530
+message ACK_Room_List {
+	 int32 Type  					= 1;
+	 int32 City 					= 2; 
+	repeated ACK_Room_Info List 			= 3; //房间数组
+}
+
+//查询房间  MsgID : 540
+message ACK_Find_Room {
+	 int32 RID       			= 1;  
+	 int32 UserCount  			= 2;  //玩家数量
+}
+
+ 
+// 消息  MsgID : 550
+message ACK_MSG {
+	 string UID   	= 1;  
+	 int32 Type 	= 2;
+	 string MSG      = 3;
+}
+
+
+//进入房间  MsgID : 560
+message ACKBC_Into_Room {
+	 string 	name       	 = 1;	// Nick Name
+	 string 	uid      	 = 2;  	// User ID  用户ID
+	 int32 		room_id      = 3;    // 房间号
+	 string 	ip      	 = 4;  	//
+	 int32 		index   	 = 5;    // 房间位置// 0=东
+	 string 	icon    	 = 6;  	// 头像
+	 int32 		coin    	 = 7;    // 金币
+	 int32 		type    	 = 8;    // 类型
+	 int32 		diamond 	 = 9;    // 钻石
+	 int32 		level   	 = 10;   // 等级
+	 int32 		robot   	 = 11;   // 是否是机器人
+	 float 		GPS_LNG  	 = 12;	// 经度 Longitude   简写Lng
+	 float 		GPS_LAT  	 = 13;	// 纬度 Latitude	简写Lat
+     int32      unique_code  = 14;   // 房间唯一标识信息
+}
+
+
+//进入匹配场  MsgID : 570
+message ACK_Into_MatchRoom {
+	 string SID    				= 1;	     
+	 ACK_Room_Info RoomInfo   	= 2;      
+}
+
+//退出房间 广播  MsgID : 580
+message ACKBC_Exit_Room {
+	 string  uid  	=1;
+}
+
+//创建房间  MsgID : 590
+message ACK_Create_Room {
+	 int32 RID   			= 1;    //房间号
+	 string PWD   			= 2;	//密码
+	 repeated int32 Rule	= 3;   	//规则列表
+	 int32 Type 			= 4;    //类型 游戏类型
+	 int32 Err  			= 5;   	//错误
+	 string MSG  			= 6; 	//消息
+}
+ 
+
+//玩家准备的信息  MsgID : 600
+message ACKBC_Ready {
+	 int32 ReadyCount  = 1; // 已经准备好的用户
+	 string UID        = 2; //  
+	 string MSG        = 3; // 
+}
+
+//各种玩法的状态     MsgID : 605
+// Type 状态类型 
+// TimeOut 读秒时间 
+// Val 值 (按游戏玩法来) 
+message Room_State {
+	 int32 Type  		= 1;   		   // 血流 (换3张)   血流 (定缺) ....
+	 int32 TimeOut      = 2;			   // >0 在读秒
+	repeated int32 Val 			= 3;   		   // 结果 [0,2,3] [1,2,3,3]
+}
+
+
+//坐下   	MsgID : 607
+message ACKBC_Sitdown {
+	int32  uid = 1;		//UserID
+	int32  index = 2;	//位置
+	string nick_name = 3; //当前开局人昵称
+}
+
+//站起来   MsgID : 608
+message ACKBC_Standup {
+	int32  uid = 1;
+	int32  index = 2;
+	string nick_name = 3; //当前开局人昵称
+}
+
+//初始化 房间牌局信息 (新开局, 断线重连)   MsgID : 610
+message ACKBC_Card_Init {
+	 int32 Dict      			= 1;           // 骰子
+	 int32 CardCount 			= 2;           // 总共有多少张牌
+	 int32 CardFirst 			= 3;           // 拿牌的位置
+	 int32 EndBlank  			= 4;           // 结尾空的牌, 用于杠牌
+	 int32 CardLeft  			= 5;           // 还剩多少张牌
+	 int32 CurCardId 			= 6;           // 当前打出的牌的id
+	 int32 CurIndex  			= 7;           // 当前用户(需要出牌的)
+	 int32 CurTime   			= 8;           // 当前回合时间
+	 int32 ZhuangIndex  		= 9;       	   // 庄家Index
+	 int32 StartGame 			= 10;          // 是否已经开始 0=否 1=是
+	 repeated int32 Defeat  	= 11; 		   // 已经认输的玩家 
+	 repeated Room_State States = 12;   	   // 特殊玩法状态
+	 int32 last_put_index 		= 13; 		   // 最后出牌玩家
+	 bool show 					= 14; 		   // 是否显示 false:不显示 true:显示
+}
+
+
+//玩家座位信息 MsgID : 615
+message ACK_User_SeatCard {
+	repeated SeatCard Cards 			= 1;    // 所有玩家的牌 (不包括手牌)
+}
+ 
+
+//游戏开始  MsgID : 620
+message ACKBC_Start {
+	  int32 room_id     = 1;
+	  int32 points      = 2;
+	  int32 state       = 3;	//0:
+	  int32 roll_index  = 4;   	// 扔骰子玩家索引
+	  int32 zhuang_index = 5; 	// 庄家索引
+	  repeated ACK_User_Info Users 	= 6;     // 房间用户信息, 按照Index顺序
+	  int32 direction = 7; //风圈 0-3(东南西北)
+      int32 round_count = 8; //当前已进行局数
+      int32 total_round_count = 9; //总局数
+      int64 left_time = 10; //距离房间结束剩余秒数
+      int32 type = 11; //1：按局数计算 2：按时间结算 (8,9,10参考11进行显示)
+}
+
+//初始牌()  MsgID : 650
+message ACK_UserCard {
+	 int32  Seat   			= 1;
+	repeated Card Cards  			= 2;   // 13张手牌
+}
+
+
+// 开始换3张  MsgID : 660
+message ACK_StartChange3Card  {
+	 int32 Seat    			= 1; 	// user index 
+	 repeated int32 Cards    		= 2; 	// 默认三张(数组)
+	 int32 TimeOut			= 3;	// 超时
+}
+
+
+// 开始定缺  MsgID : 670
+message ACK_StartFixMiss {
+	 int32 Seat    			= 1;
+	 int32 Type   			= 2; //默认缺
+	 int32 TimeOut			= 3;
+}
+
+// 换三张  MsgID : 680
+message ACK_Change3Card_OK  {
+	 int32 Seat    			= 1;
+	repeated int32 Cards    		= 2;
+}
+
+// 定缺广播  MsgID : 690
+message ACKBC_FixMiss_OK   {
+	repeated int32 MissType  = 1;
+}
+
+//当前回合的玩家  MsgID : 700
+message ACKBC_CurPlayer {
+	 int32  	Seat   			= 1;  // 座位
+	 int32   	Type   			= 2;  // 操作类型
+	repeated int32 		Tool   			= 3;  // 自摸, 暗杠,
+	 int32 		RoundTime  		= 4;  // 回合时间
+}
+   
+//摸牌  MsgID : 710
+message ACKBC_GetCard {
+	 int32   index    	= 1;    // 座位
+	 int32   cid     	= 2;    // Card ID
+	 bool    from_last  = 3;    //  true=后面  false=前面
+}
+
+//出牌   MsgID : 720
+message ACKBC_PutCard{
+	 int32 index   = 1;
+	 int32 cid    = 2;
+	 int32 ting   = 3;
+}
+
+//等待操作 ACK_WaitTool   MsgID : 730
+message ACK_WaitTool   {
+	 int32 Seat   			= 1; 	// 座位
+	repeated int32 Type    			= 2; 	// 胡 杠 碰 吃
+	 int32 TimeOut 			= 3;    // 超时
+}
+
+
+//吃牌 BC  MsgID : 740
+message ACKBC_Chow   {
+	 int32 Seat    	= 1; 	// user index
+	 int32 TSeat   	= 2; 	// target index
+	 int32 CID1   	= 3;    // Card ID
+	 int32 CID2  	= 4;   	// Card ID
+	 int32 CID3  	= 5;   	// Card ID
+} 
+
+
+//碰牌 BC  MsgID : 750
+message ACKBC_Peng  {
+	 int32 Seat    	= 1; 	// user index
+	 int32 TSeat   	= 2; 	// target index
+	 int32 CID   	= 3;	// Card ID
+}
+
+//杠牌 BC 暗杠不带CID, Type, Number,  MsgID : 760
+message ACKBC_Kong  {
+	 int32 Seat    	= 1; 	// user index
+	 int32 TSeat   	= 2; 	// target index
+	 int32 KongType = 3;  	//0 = 不可以杠 1=直杠 2=暗杠 3=碰杠(面下杠, 补杠)
+	 int32 CID    	= 4;  	//Card ID
+}
+
+// 胡牌(带一炮多响) BC  MsgID : 770
+message ACKBC_Win  {
+	repeated int32 Seat    	= 1; 	// user index [1,1,1]
+	int32 TSeat   	= 2; 	// target index
+	int32 CID  	= 3;    //Card ID 胡的牌
+	repeated SeatCard Cards 			= 4;    // 所有玩家的牌 (不包括手牌)
+}
+
+//流局  MsgID : 780
+message ACKBC_Draw   {
+	 int32 room_id = 1;
+	 repeated SeatCard Cards = 2; //所有玩家的牌
+}
+
+message Reward {
+	int32 score = 1; //当前奖励分数
+	int32 total_score = 2; //当前总分数
+}
+
+// 一局结束的结算  MsgID : 790
+message ACKBC_Total {
+	 int32 WinSeat     					= 1;// 赢家的位置
+	 int32 WinCard   					= 2;// 胡的牌
+	 repeated SeatCard   	Cards  		= 3;// 牌型
+	 repeated int32 		Tai 		= 4;// 总台数
+	 repeated string   		Msg  		= 5;// 算番信息
+	 repeated Reward 		Reward  	= 6;// 奖励
+	 bool finished 						= 7;//是否结束(true 已结束 false未结束)
+	 int64 round_count 					= 8;//当前已进行局数
+	 string attached                    = 9;//附加信息
+}
+
+// 解散房间广播  MsgID : 800
+message ACKBC_Disband_Room  {
+	 repeated int32 Agrees   	= 1;  // 同意的 -1=等待中 0=反对  1=同意
+	 int32 StartIndex   	  	= 2; 	// 发起者Index
+	 bool Disbanded 			= 3;  // 是否已经解散
+}
+
+
+// 每次操作的结算 (血流)  MsgID : 810
+message ACKBC_RoundScore {
+	repeated int32 Scores   = 1;
+	repeated string MSG     = 2;     
+}
+
+// 特效事件  MsgID : 820
+message ACKBC_EffectEvent {
+	repeated int32 Type  = 1;// 特效类型 -1为无特效
+}
+
+
+
+// 救济金  MsgID : 830
+message ACK_Benefits {
+	 string UID      = 1;
+	 int32 Reward    = 2;
+	 int32 Coin      = 3;
+}
+
+
+// 需要救济金(客户端弹出页面)  MsgID : 840
+message ACK_NeedBenefits   {
+	 string UID   = 1;
+	 int32 Coin   = 2;
+}
+
+
+
+// 重新开始(客户端清空, 不包括用户信息)  MsgID : 850
+message ACKBC_Restart { 
+	 int32 RID   = 1;
+	 string MSG  = 2;
+}
+
+
+//   MsgID : 860
+message Card {
+	 int32 cid  			= 1; 	// Card id
+	 int32 target_index 	= 2; 	// Target Index, 碰吃杠的位置
+	 int32 type 			= 3; 	// 杠(0=明杠 1=暗杠 2=碰杠) 吃(0:自己的牌 1:吃掉的牌) 状态类型
+}
+
+
+
+// 玩家的牌,  用于进入玩家同步数据
+//   MsgID : 870
+message SeatCard {
+	int32 Seat	 		= 1;    // 座位
+	int32 ListLen		= 2;    // 手牌数量
+	repeated Card List  		= 3;	// 手牌
+	repeated Card Kong  		= 4;    // 杠的牌
+	repeated Card Peng  		= 5; 	// 碰的牌
+	repeated Card Chow  		= 6; 	// 吃的牌
+	repeated Card Out   		= 7;	// 打出的牌
+	repeated Card Hua   		= 8; 	// 花牌
+	repeated Card Hu    		= 9;	// 胡的牌
+	int32 last_card_id 			= 10;   // 最后一张吃碰的牌ID
+    int32 type                  = 11;   // 1:吃2：碰 3：杠
+}
+
+// 错误信息   MsgID : -1
+message ErrorItem {
+	 int32 code = 1;
+	 string message = 2;
+}
+
+
+// 发送消息  MsgID : 880 
+message ACKBC_SendMsg {
+	string UID  = 1;
+	int32 Type  = 2;	// 消息类型
+	int32 Msg 	= 3;    // 消息ID
+}
+
+// (预留)发送Json消息 MsgID : 890
+message ACK_MessageJson {
+	string JSON  	= 1;
+}
+
+message NotifyStartGame{
+	string uid = 1;
+}
+
+message Notice {
+	int32 id = 1; //本地保存最大noticeid
+}
+
+message NoticeInfo{
+    int32 id = 1; //id
+    string content = 2; //内容
+    int32 type = 3; //类型(1:跑马灯 2：系统公告)
+}
+
+message AckNotice {
+     repeated NoticeInfo notices = 1;
+}
+
+message Summary {
+    string 		id    		= 1; 	// 用户ID
+    string 		name    	= 2;  	// Nick Name
+    string 		icon  		= 3; 	// 头像
+    int32       round_count = 4;    // 对战局数
+    int32 		win_count  	= 5;   	// 赢取次数
+    int32       pay_count   = 6;    // 赔付次数
+    int32       fire_count  = 7;    // 点炮次数
+    int32       score       = 8;    // 累计分数
+    bool        houseowner  = 9;    // 是否房主(false:不是 true:是)
+    int32       rank        = 10;   // 排名(1-4)
+}
+
+message TotalSummary {
+   repeated Summary list = 1;
+}
+
+//400
+message Disband {
+	int32 room_id = 1;
+}
+
+message DisbandItem {
+	string user_id = 1;
+	string nick_name = 2;
+	string icon = 3;
+	int64 result = 4; //1：同意解散 2：反对解散
+	bool is_starter = 5; //true 发起者
+}
+
+//800
+message AckDisband{
+	repeated DisbandItem list = 1;
+	int32 left_time = 2; //秒
+}
+
+//401
+message Vote {
+	int32 room_id = 1;
+	int32 result = 2; //1：同意解散 2：反对解散
+}
+
+//940
+message NotifyDisband{
+	int32 room_id = 1;
+	int32 result = 2; //1:成功 2:失败
+}
+
+message BattleRecord {
+	int32 type = 1;//房间类型 参考GTYPE_*
+	int32 total_round_count = 2; //参与局数
+	int32 ratio = 3; //胜率
+}
+
+message BattleRecordRequest {
+}
+
+message BattleRecordResponse {
+	repeated BattleRecord list = 1;
+}
+
+message HomeOwner{
+	string id = 1; //用户id
+	string nick_name = 2; //昵称
+	string icon = 3;
+	string rule = 4; //规则
+	int64 timestamp = 5; //创建时间
+	int64 room_id = 6; //房间id
+    string unique_code = 7; //房间唯一性索引
+}
+
+message HomeOwnerRequest {
+	int32 type = 1; //房间类型
+}
+
+message HomeOwnerResponse {
+	repeated HomeOwner list = 1;
+}
+
+message RoomSummaryRequest {
+    string unique_code = 1; //房间唯一性索引
+}
+
+message RoomSummaryResponse {
+	repeated Summary list = 1;
+	int32 room_id = 2; //内存房间号
+    HomeOwner home_owner = 3; //当前房主信息
+}
+
+message NotifyUserState {
+	string id = 1; //user_id
+	int32 status = 2; //1：在线 2：离线
+	int32 offline_time = 3; //离线倒计时单位秒
+}
+
+message Tip {
+    string tip = 1; //提示
+}
+
+message NotifyKick {
+	repeated int32 indexs = 1; //当前可踢得玩家index
+}
+
+message NotifyDestoryRoom {
+	int32 room_id = 1; //当前销毁的房间号
+}
+
+message NotifyRecharge{
+    int32 id = 1; //数据库user_id
+}
+
+//991
+message NotifyRechargeResponse{
+	int32 id = 1; //数据库user_id
+	int32 diamond = 2; //当前总钻石数
+}
+
+//换花请求
+message TransferHuaRequest{
+}
+
+//换花响应
+message TransferHuaResponse{
+    int32 index =1; //当前换花的玩家索引
+    repeated int32 hua_list = 2; // 初始化，手中花牌
+    repeated int32 card_ids = 3; //换好之后的牌(其中可能会有花牌)
+}
+
+enum MsgID
+{
+	
+	// REQ --------------
+	MSG_NO 				= 0;
+	MSG_OK 				= 1;
+	MSG_Login 			= 100;  //登陆
+	MSG_Room_List 		= 110; 
+	MSG_Create_Room 	= 120;
+	MSG_RuleItem 		= 130;
+	MSG_Find_Room 		= 140;
+	MSG_Disband_Room 	= 150;
+	MSG_Room_Info 		= 160;
+	MSG_Into_Room 		= 170;
+	MSG_Into_MatchRoom 	= 180;
+	MSG_Exit_Room 		= 190;
+	MSG_Sitdown      	= 195;	
+	MSG_Standup		 	= 196;
+	MSG_User_Info 		= 200;
+	MSG_User_Ready 		= 210; 
+	MSG_Start_Game 		= 220;
+	MSG_Restart_Game 	= 230;
+	//MSG_User_Leave 		= 240;
+	MSG_Get_CurUser 	= 250;
+	MSG_Get_User_Card_Count = 260;
+	MSG_Put_Card 		= 270;
+	MSG_Get_UserCard 	= 280;
+	MSG_Chow 			= 290;
+	MSG_Peng 			= 300;
+	MSG_Kong 			= 310;
+	MSG_Ting			= 315;
+	MSG_Win 			= 320;
+	MSG_Pass 			= 330;
+	MSG_Benefits 		= 340;
+	MSG_Change3Card 	= 350;
+	MSG_FixMiss 		= 360;
+	MSG_Chat			= 370;
+	MSG_MessageJson     = 380;
+	MSG_Notice     		= 390;
+	MSG_Disband     	= 400;
+	MSG_Vote     	    = 401;
+	MSG_Battle_Record   = 402;
+	MSG_Home_Owner	 	= 403;
+	MSG_Room_Summary    = 404;
+	MSG_Room_Kick    	= 405;
+
+	// ACK ------------- 
+	MSG_ACK_Error 			= -1;
+	MSG_ACK_Login 			= 500;
+	MSG_ACK_User_Info 		= 510;
+	MSG_ACK_RoomInfo 		= 520;
+	MSG_ACK_Room_User		= 525;
+	MSG_ACK_Room_List 		= 530;
+	MSG_ACK_Find_Room 		= 540;
+	MSG_ACK_MSG 			= 550;
+	MSG_ACKBC_Into_Room 	= 560;
+	MSG_ACK_Into_MatchRoom 	= 570;
+	MSG_ACKBC_Exit_Room 	= 580;
+	MSG_ACK_Create_Room 	= 590;
+	MSG_ACKBC_Ready 		= 600; 
+	MSG_Room_State			= 605;
+	MSG_ACKBC_Sitdown		= 607;
+	MSG_ACKBC_Standup    	= 608;
+	MSG_ACKBC_Card_Init 	= 610;
+	MSG_ACK_User_SeatCard 	= 615;
+	MSG_ACKBC_Start 		= 620;
+	MSG_ACK_UserCard 		= 650;
+	MSG_ACK_StartChange3Card = 660;
+	MSG_ACK_StartFixMiss 	= 670;
+	MSG_ACK_Change3Card_OK 	= 680;
+	MSG_ACKBC_FixMiss_OK 	= 690;
+	MSG_ACKBC_CurPlayer 	= 700;
+	MSG_ACKBC_GetCard 		= 710;
+	MSG_ACKBC_PutCard 		= 720;
+	MSG_ACK_WaitTool 		= 730;
+	MSG_ACKBC_Chow 			= 740;
+	MSG_ACKBC_Peng 			= 750;
+	MSG_ACKBC_Kong 			= 760;
+	MSG_ACKBC_Win 			= 770;
+	MSG_ACKBC_Draw 			= 780;
+	MSG_ACKBC_Total 		= 790;
+	MSG_ACKBC_Disband_Room 	= 800;
+	MSG_ACKBC_RoundScore 	= 810;
+	MSG_ACKBC_EffectEvent 	= 820;
+	MSG_ACK_Benefits 		= 830;
+	MSG_ACK_NeedBenefits 	= 840;
+	MSG_ACKBC_Restart 		= 850;
+	MSG_Card 				= 860;
+	MSG_SeatCard 			= 870;
+	MSG_ACKBC_Chat			= 880;
+	MSG_ACK_MessageJson    	= 890;
+    MSG_ACK_Notice          = 910;
+    MSG_UPDATE_USERINFO     = 930;
+	MSG_ACKBC_KICK 			= 980;
+	MSG_ACK_NOTIFY_RECHARGE = 991;
+    MSG_ACKBC_TRANSFER_HUA  = 992;
+
+	MSG_ACK_Battle_Record   = 950;
+	MSG_ACK_Home_Owner		= 951;
+	MSG_ACK_Room_Summary   	= 952;
+	//notify
+	MSG_NOTIFY_START_GAME 	= 900;
+    MSG_NOTIFY_SUMMARY 		= 920;
+	MSG_NOTIFY_DISBAND     	= 940;
+	MSG_NOTIFY_USER_STATE   = 960;
+    MSG_NOTIFY_TIP          = 970;
+	MSG_NOTIFY_KICK         = 971;
+	MSG_NOTIFY_DESTORY_ROOM = 972;
+	MSG_NOTIFY_RECHARGE 	= 990;
+
+	//------ 游戏类型  Game Type
+	GTYPE_SiChuan_XueLiu		= 2000;  //血流
+	GTYPE_SiChuan_XueZhan		= 2010;  //血战
+	GTYPE_ZheJiang_XiZhou  		= 3000;  //西周
+	GTYPE_ZheJiang_XiangShan	= 3010;  //象山
+	
+	
+	//------ 游戏状态(血流)  State Type 
+	STYPE_Change3Card			= 5000;  //换3张
+	STYPE_MissType				= 5001;  //定缺
+	
+}
+
+enum StateID
+{
+	//------ 用户状态  User State 
+	UserState_Normal     = 0;			// 在大厅里(未在玩游戏)
+	UserState_Stand      = 5;  			// 站起来的
+	UserState_Sit        = 6;  			// 坐下
+	UserState_Ready      = 10; 			// 已经准备
+	UserState_Wait       = 15; 			// 等待(其他玩家出牌)
+	UserState_WaitPut    = 20; 			// 等待出牌
+	UserState_WaitTool   = 30; 			// 等待操作
+	UserState_Disconnect = 40; 			// 断线中
+	UserState_Looker     = 50; 			// 围观
+	UserState_WaitVote   = 60; 			// 等待投票中
+	
+	GameState_Normal  		= 3;   		// 刚创建房间
+	GameState_Playing 		= 200; 		// 游戏进行中
+	GameState_Stoped  		= 210; 		// 游戏暂停(用户断线)
+	GameState_Vote    		= 220; 		// 投票中
+	GameState_Total   		= 230; 		// 结算中
+}
+	
+enum RuleID
+{	
+	//------- 规则 ID
+	Rule_def    		= 0;
+	Rule_15min  		= 19;  	// 
+	Rule_20min  		= 20;	//
+	Rule_30min 			= 21;	//
+	Rule_60min 			= 22;	//
+	Rule_4Round         = 4;	//
+	Rule_8Round  		= 8;	//
+	Rule_16Round 		= 9;	//
+	Rule_1Pay   		= 23;	// 1人付
+	Rule_4Pay   		= 24;	// 4人付
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1 @@
+for(var protobuf=require("../runtime"),buffer=protobuf.Writer.create().uint32(10).string("hello world!").finish(),reader=protobuf.Reader.create(buffer);reader.pos<reader.len;){var tag=reader.uint32();switch(tag>>>3){case 1:console.log(reader.string());break;default:reader.skipType(7&tag)}}

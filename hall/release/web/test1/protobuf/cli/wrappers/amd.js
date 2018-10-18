@@ -1,0 +1,1 @@
+define(["protobuf"],function(t){"use strict";return $OUTPUT,$root});

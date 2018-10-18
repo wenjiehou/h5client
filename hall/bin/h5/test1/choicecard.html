@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content=" "> 
+	 
+		<script src="jquery.js"></script> 
+		<script src="reconnecting-websocket.min.js"></script>
+		<!-- <script src="protobuf/dist/protobuf.js"></script> -->
+		<script src="protobuf.js"></script>
+		<title>testlink </title>
+		<style>
+			button{
+				margin: 3px;
+			}
+			.tool_panel{ 
+			} 
+		</style>
+
+	</head>
+
+	<body onLoad="javascript:init()">
+		<script type="text/javascript"> 
+		
+			var url = "ws://192.168.18.182:8081"; //; //192.168.18.103:8081
+			var name ="";
+			var sid = "";
+			var uid = "";
+			var rid = 1001;
+			
+			var textbox;
+			
+			//---------------------------
+			var ws;
+			var bConnected = false;
+			var proto = null;
+			var message = null;
+			
+			// 消息结构
+			var callinfo = {
+				id : 0,
+				fun : null
+			}
+			
+			var funDict = []; //消息容器 
+			
+			function initInfo(){
+			
+				funDict[500] = {id:500, fun:ack_login};
+				//funDict[590] = {id:590, fun:ack_create_room};
+				funDict[550] = {id:550, fun:ack_msg};
+				//funDict[530] = {id:530, fun:ack_room_List}; 
+				//funDict[615] = {id:615, fun:ack_seat_card}; 
+				//funDict[560] = {id:560, fun:ack_into_room}; 
+				//funDict[520] = {id:520, fun:ack_room_info}; 
+				//funDict[525] = {id:525, fun:ack_room_user}; 
+				//funDict[730] = {id:730, fun:ack_waitchecktool};
+				funDict[890] = {id:890, fun:ack_messageJson}; 				
+			 
+			}
+			
+			var nums = ['一','二','三','四','五','六','七','八','九'];
+			var Dict_fengs = ["东", "南", "西", "北"];
+			var Dict_jians = ["红中", "发财", "白板"];
+			var Dict_huas = ["春", "夏", "秋", "冬", "梅", "兰", "竹", "菊"];
+			
+			function getnum(num){
+				return nums[num];
+			}
+			
+			function clicknum(num){
+				$("#cid").val(num);
+			}
+			 
+			
+			function buildDiv(){
+				var html = "";
+				html+='<table width="200" border="0" cellpadding="0" cellspacing="0">';
+				
+				html+='<tr>';
+				for(var i=0;i<42;i++){
+					html+='<td onclick="javascript:clicknum('+i+')">' + i + '</td>';
+				}
+				html+='</tr>';
+				
+				html+='<tr>';
+				for(i=0;i<9;i++){
+					html+='<td>' + getnum(i) + '万</td>';
+				}
+				for(i=0;i<9;i++){
+					html+='<td>' + getnum(i) + '筒</td>';
+				}
+				for(i=0;i<9;i++){
+					html+='<td>' + getnum(i) + '条</td>';
+				}
+				for(i=0;i<4;i++){
+					html+='<td>' + Dict_fengs[i] + '</td>';
+				}
+				for(i=0;i<3;i++){
+					html+='<td>' + Dict_jians[i] + '</td>';
+				}
+				for(i=0;i<8;i++){
+					html+='<td>' + Dict_huas[i] + '</td>';
+				}
+				html+='</tr>';
+				
+				
+				
+				html+='</table>'; 
+				$("#cardinfo").html(html);
+				
+			}
+		
+			function init(){
+				protobuf.load("mjgame.proto", function(err, root) { 
+						proto = root; 
+						message = proto.lookupType("mjgame.Message");
+				});
+				initInfo();
+				
+				buildDiv();
+				
+				textbox = $("#infobox");
+		 		textbox.text("Websocket connect : " + url);
+				$("#url").text(url);
+				$("#rid").text(rid);
+				 
+				setTimeout(function (){ 
+						Reconnect();
+				}, 500);
+				
+			} 
+			
+			//重连
+			function Reconnect(){ 
+				if(!bConnected){
+					connect();
+					setTimeout(function () { 
+						Reconnect();
+					}, 2000);
+				}
+			}
+			
+			//连接
+			function connect(){
+				//ws = new WebSocket(url);  
+				ws = new ReconnectingWebSocket(url);
+				ws.onmessage = function(evt) {  
+					parseBlob(evt.data) 
+				} 
+				ws.onopen = function(){
+					bConnected = true;
+					login();
+				}
+				ws.onclose = function(){
+					bConnected = false;
+					alert("连接关闭");
+				}
+			}
+			 
+			//转换byte
+			function convert(data, cb) { 
+				var fileReader = new FileReader(); 
+				fileReader.onload = function () { 
+					cb(new Uint8Array(this.result));
+				}; 
+				fileReader.readAsArrayBuffer(data);
+			} 
+
+			function parseBlob(blob) {  
+				 convert(blob, function(arr){ 
+					var msgDec = message.decode(arr);
+					console.log(msgDec);
+					msgfun = funDict[msgDec.ID];
+					if(msgfun!=null && msgfun!=undefined){
+						msgfun["fun"](msgDec.MSG);
+					}else{ 
+						$("#infobox").val(JSON.stringify( msgDec ))
+					}
+				 }) 
+			}
+			
+			function SendMessage(id, msgbyte){  
+				var msgobj = {ID:id, MSG:msgbyte};
+				var msg = message.create(msgobj);	 
+				var buffer = message.encode(msg).finish(); 
+				ws.send(buffer);  
+			} 
+			
+			
+			
+			// 登录 REQ
+			function login(){
+				sid = $("#sid").val();
+				openid = $("#openid").val()
+				var login = proto.lookupType("mjgame.Login");
+				console.log(openid)
+				if (openid == 0){
+					alert("openid 不能为0")
+				}
+				var pLogin = login.create({SID:openid, openid:""+openid}); 
+				var bufferLoginByt = login.encode(pLogin).finish();
+				console.log(bufferLoginByt)
+				SendMessage(100,bufferLoginByt); 
+			}
+			
+			
+			function openClient(){
+				connect();			
+			}
+			
+			
+			//选牌
+			function choiceCard(){
+			rid = $("#rid").val();
+			//uid = $("#uid").val();
+			cid = $("#cid").val();
+			var group = $("[name='isBack']").filter(":checked"); 
+			var isBack = group.attr("value")
+			console.log(isBack);
+			if(isBack ==1){
+			if(!confirm("确定要从后面取牌"))
+				return;
+			}
+		    var js = {
+				rid:parseInt(rid),
+				cid:parseInt(cid),
+				handleType :10,
+				isBack:parseInt(isBack)
+			}
+			console.log(js);
+			
+			var fun =  proto.lookupType("mjgame.MessageJson");
+			var pFun = fun.create({SID:'10', JSON: JSON.stringify(js)}); 
+			var bufferLoginByt = fun.encode(pFun).finish();
+			SendMessage(380,bufferLoginByt); 
+			}
+			
+			
+			function onlineUsers(){
+				var js = {}
+				var fun =  proto.lookupType("mjgame.MessageJson");
+				var pFun = fun.create({SID:'1000', JSON: JSON.stringify(js)}); 
+				var bufferLoginByt = fun.encode(pFun).finish();
+				SendMessage(380,bufferLoginByt); 
+			}
+			//设置牌局开始的前13张牌
+			function setInitCards(){
+				rid = $("#rid_01").val()
+			    uid = $("#uid").val();
+				cids = $("#cids").val();				
+				cidarr = cids.split(",");
+				console.log(cidarr);
+				if(rid.length<1){
+				alert("rid设置错误")
+				}
+				if(uid.length<1){
+					alert("uid设置错误")
+				return
+				}
+				if(cidarr.length!=13){
+					if(cidarr.length!=14){
+					alert("cids设置错误")
+					return
+					}
+				}
+				
+				
+				var js = {
+					rid:parseInt(rid),
+					uid:uid,
+					cids:cidarr		
+				}
+				console.log(js);
+				console.log(JSON.stringify(js))
+			
+				var fun =  proto.lookupType("mjgame.MessageJson");
+				var pFun = fun.create({SID:'20', JSON: JSON.stringify(js)}); 
+				var bufferLoginByt = fun.encode(pFun).finish();
+				SendMessage(380,bufferLoginByt); 
+			}
+			
+			// 登录 ACK
+			function ack_login(msg){ 
+					var login = proto.lookupType("mjgame.ACK_Login"); 
+					var mLogin = login.decode(msg); 
+					$("#infobox").text(JSON.stringify( mLogin ));
+					sid = mLogin.SID;
+					uid = mLogin.UID; 
+		
+					$("#name").val(mLogin.Name);
+					$("#uid").val(uid); 
+					
+					//rid = mLogin.RID;
+					//$("#rid").val(rid);
+					 
+			} 
+			
+				// 消息
+			function ack_msg(msg){
+				var p = proto.lookupType("mjgame.ACK_MSG"); 
+				var m = p.decode(msg);
+				$("#infobox").val(JSON.stringify( m ));
+			}
+			
+			function ack_messageJson(msg){
+				var m = proto.lookupType("mjgame.ACK_MessageJson");
+				var mm = m.decode(msg);  
+				var str = JSON.stringify( mm ); 
+				console.log(str);
+				$("#infobox").val(str);
+			 
+			}
+			
+		</script>
+
+		<div style="margin: 10px;">	
+		<div style="padding: 10px;"><h3>设置openid</h3>
+		<span>openid :<Input id="openid" type="textbox"  value="234" /></span>
+		<button onClick="javascript: openClient()">确认</button>		
+		</div>
+		<div style="padding: 10px;"><h3>查看在线人数</h3>
+		<button onClick="javascript: onlineUsers()">确认</button>		
+		</div>
+			<div style="padding: 10px;"><h3>设置下一张牌</h3>
+					<span id="url">ws://192.168.18.119:8081</span>&nbsp;
+					<span class="tool_panel">					
+						<span>RID :<Input id="rid" type="textbox"  value="1001" /></span>
+						<span>CID<Input id="cid" type="textbox"  value="0" /></span>
+					</span>
+					<span>是否从后
+					<input type="radio" name="isBack" id="back" value = "1">是
+					<input type="radio" name="isBack" id="front" value = "0" checked="true" >否<br>
+					
+					</span>
+					
+						
+					
+					<!--&nbsp;&nbsp;<span><b>RID : </b><Input id="rid" type="textbox"  value="10001"  style="width:50px"/></span>-->
+			</div>	
+			<div style="padding: 10px;">
+			<button onClick="javascript: choiceCard()">确认选牌</button>
+		</div>
+		<!-- Fixed navbar -->
+        <style type="text/css">
+			#cardinfo td{
+				padding:3px;
+				border-left:1px solid #999999;
+				cursor:pointer;
+			}
+			#cardinfo td:hover{
+				background-color:#eee;
+			}
+		</style>
+		<div id="cardinfo" style=""></div>
+		<div>
+		<br><h3>首牌设置</h3>
+			<div style="padding: 10px;">
+					<span class="tool_panel">
+					<span>RID :<Input id="rid_01" type="textbox"  value="1001" /></span>
+					<span>UID :<Input id="uid" type="textbox"  value="" /></span>
+					<span>CIDS<Input id="cids" type="textbox"  value="0" /></span>
+					</span>
+			</div>
+			<button onClick="javascript: setInitCards()">确认首牌</button>
+			</div>  </div>
+		
+		<textarea id="infobox" style="width: 100%; height: 500px; clear: both;"> 
+	
+		</textarea>
+
+		<!--footer-->
+
+	</body>
+
+</html>

@@ -1,0 +1,1 @@
+var tape=require("tape"),protobuf=require(".."),def={keyType:"bytes",type:"string",id:1,extend:void 0,options:void 0};tape.test("reflected map fields",function(e){var o=protobuf.MapField.fromJSON("a",def);e.same(o.toJSON(),def,"should construct from and convert back to JSON"),e.throws(function(){o.resolve()},Error,"should throw for invalid key types"),e.end()});

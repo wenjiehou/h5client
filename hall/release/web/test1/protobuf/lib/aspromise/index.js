@@ -1,0 +1,1 @@
+"use strict";function asPromise(r,s){for(var e=[],t=2;t<arguments.length;)e.push(arguments[t++]);var n=!0;return new Promise(function(t,i){e.push(function(r){if(n)if(n=!1,r)i(r);else{for(var s=[],e=1;e<arguments.length;)s.push(arguments[e++]);t.apply(null,s)}});try{r.apply(s||this,e)}catch(r){n&&(n=!1,i(r))}})}module.exports=asPromise;

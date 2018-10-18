@@ -1,0 +1,43 @@
+﻿{"frames":{"shandian0001.png":{"frame":{"x":0,"y":0,"w":75,"h":227,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":17,"y":6,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0002.png":{"frame":{"x":0,"y":229,"w":75,"h":227,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":17,"y":6,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0003.png":{"frame":{"x":77,"y":0,"w":97,"h":213,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":7,"y":126,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0004.png":{"frame":{"x":77,"y":215,"w":97,"h":213,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":7,"y":126,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0005.png":{"frame":{"x":176,"y":0,"w":82,"h":212,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":15,"y":127,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0006.png":{"frame":{"x":176,"y":214,"w":82,"h":212,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":15,"y":127,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0007.png":{"frame":{"x":260,"y":0,"w":70,"h":213,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":21,"y":127,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0008.png":{"frame":{"x":260,"y":215,"w":70,"h":213,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":21,"y":127,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0009.png":{"frame":{"x":332,"y":0,"w":64,"h":210,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":25,"y":127,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0010.png":{"frame":{"x":332,"y":212,"w":64,"h":210,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":25,"y":127,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0011.png":{"frame":{"x":398,"y":0,"w":73,"h":212,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":16,"y":128,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0012.png":{"frame":{"x":398,"y":214,"w":73,"h":212,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":16,"y":128,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0013.png":{"frame":{"x":473,"y":0,"w":62,"h":210,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":26,"y":128,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0014.png":{"frame":{"x":473,"y":212,"w":62,"h":210,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":26,"y":128,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0015.png":{"frame":{"x":537,"y":0,"w":40,"h":201,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":35,"y":133,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0016.png":{"frame":{"x":537,"y":203,"w":40,"h":201,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":35,"y":133,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0017.png":{"frame":{"x":579,"y":0,"w":39,"h":201,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":36,"y":133,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0018.png":{"frame":{"x":579,"y":203,"w":39,"h":201,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":36,"y":133,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0019.png":{"frame":{"x":620,"y":0,"w":42,"h":182,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":39,"y":135,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0020.png":{"frame":{"x":620,"y":184,"w":42,"h":182,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":39,"y":135,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0021.png":{"frame":{"x":664,"y":0,"w":44,"h":154,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":33,"y":146,"w":115,"h":350},"sourceSize":{"w":115,"h":350}},"shandian0022.png":{"frame":{"x":664,"y":156,"w":44,"h":154,"idx":0},"rotated":false,"trimed":true,"spriteSourceSize":{"x":33,"y":146,"w":115,"h":350},"sourceSize":{"w":115,"h":350}}},"meta":{"app":"http://www.layabox.com","prefix":"/","version":"1.0","image":"huangseshandian.png","format":"","size":{"w":1024,"h":512},"scale":"1"}}
+
+
+jinbeikuang.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/a
+  rotate: false
+  xy: 384, 314
+  size: 102, 120
+  orig: 102, 120
+  offset: 0, 0
+  index: -1
+images/b
+  rotate: false
+  xy: 2, 2
+  size: 100, 77
+  orig: 100, 77
+  offset: 0, 0
+  index: -1
+images/c
+  rotate: false
+  xy: 2, 245
+  size: 380, 189
+  orig: 380, 189
+  offset: 0, 0
+  index: -1
+images/d
+  rotate: false
+  xy: 167, 225
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: -1
+images/e
+  rotate: false
+  xy: 2, 81
+  size: 163, 162
+  orig: 163, 162
+  offset: 0, 0
+  index: -1
