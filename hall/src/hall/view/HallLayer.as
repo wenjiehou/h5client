@@ -7,6 +7,7 @@ package hall.view
 	import hall.view.replay.OnPlayView;
 	
 	import laya.events.Event;
+	import laya.utils.Handler;
 	
 	import manager.UIManager;
 	
@@ -33,7 +34,7 @@ package hall.view
 			return _mainView;
 		}
 
-		//protected var _rechargeView:RechargeView;
+		protected var _rechargeView:RechargeView;
 		protected var _agentView:AgentView;
 		
 		
@@ -54,7 +55,7 @@ package hall.view
 			super();
 			skinRes = "res/atlas/hall.atlas";
 			this._mainView=new HMainView();
-			//this._rechargeView=new RechargeView();
+			this._rechargeView=new RechargeView();
 			this._agentView = new AgentView();
 			//this._recordView=new RecordView();
 			_onPlayView = new OnPlayView();
@@ -78,7 +79,7 @@ package hall.view
 				{
 					removeAll();
 					this.reset();
-					this.state=3;
+					this.state=4;
 					_onPlayView.show();
 					_onPlayView.detailListView.show();
 					UserData.isPreReplay = false;
@@ -104,100 +105,68 @@ package hall.view
 		private function init():void
 		{
 			this.gotoHall();
-			_skin.homeBtn.on(Event.CLICK,this,this.gotoHall);//大厅
-			_skin.actBtn.on(Event.CLICK,this,this.share);//活动
-			_skin.chongBtn.on(Event.CLICK,this,this.recharge);//充值
-			_skin.fankuiBtn.on(Event.CLICK,this,this.feedBack);//反馈
-			_skin.zhanjiBtn.on(Event.CLICK,this,this.record);//战绩
+			
+			_skin.btnTab.selectHandler = Handler.create(this,onSwitchTab,null,false);
+			
+//			_skin.homeBtn.on(Event.CLICK,this,this.gotoHall);//大厅
+//			_skin.actBtn.on(Event.CLICK,this,this.share);//活动
+//			_skin.chongBtn.on(Event.CLICK,this,this.recharge);//充值
+//			_skin.fankuiBtn.on(Event.CLICK,this,this.feedBack);//反馈
+//			_skin.zhanjiBtn.on(Event.CLICK,this,this.record);//战绩
 			
 			var t:Number=QuickUtils.getLocalVar("viewAct",0);
 			if(t==1)
 			{
-				_skin.actNewImg.visible = false;
+				//_skin.actNewImg.visible = false;
 			}
 			else
 			{
-				_skin.actNewImg.visible = true;
+				//_skin.actNewImg.visible = true;
 			}
 			
 //			EventCenter.instance.on(EventCenter.HALL_SHOW_REPORTVIEW,this,onRecord);
 			
 			
 		}
+		
+		private function onSwitchTab(idx:int):void{//0商城   1排行榜  2大厅  3反馈  4战绩
+			switch(idx){
+				case 0:
+					recharge();
+					break;
+				case 1:
+					break;
+				case 2:
+					gotoHall();
+					break;
+				case 3:
+					feedBack();
+					break;
+				case 4:
+					record();
+					break;
+			}
+		}
+		
+		
+		
 		private function shareCall():void
 		{
 			reset();
 			switch(this.state)
 			{
 				case 0://大厅
-//					_skin.datingBtn_c.visible=true;
-//					_skin.activityBtn_r.visible=true;//活动
-//					_skin.chongchiBtn_r.visible=true;//充值
-//					_skin.fankuiBtn_l.visible=true;//反馈
-//					_skin.zhanjiBtn_l.visible=true;//战绩
-					
-					//_skin.seleHome.visible = true;
-					
-					_skin.homeNormal.visible = false;
-					_skin.homeDown.visible = true;
-					
 					break;
 				case 1://充值
-					
-					_skin.chongNormal.visible = false;
-					_skin.chongDown.visible = true;
-					
-
-					//_skin.seleChong.visible = true;
-
-//					_skin.chongchiBtn_c.visible=true;
-//					_skin.activityBtn_l.visible=true;//活动
-//					_skin.datingBtn_l.visible=true;//大厅
-//					_skin.fankuiBtn_l.visible=true;//反馈
-//					_skin.zhanjiBtn_l.visible=true;//战绩
 					break;
 				case 2://反馈
-					//_skin.seleFankui.visible = true;
-					
-					_skin.fankuiNormal.visible = false;
-					_skin.fankuiDown.visible = true;
-					
-//					_skin.fankuiBtn_c.visible=true;
-//					_skin.chongchiBtn_r.visible=true;//充值
-//					_skin.activityBtn_r.visible=true;//活动
-//					_skin.datingBtn_r.visible=true;//大厅
-//					_skin.zhanjiBtn_l.visible=true;//战绩
 					break;
 				case 3://战绩
-					//_skin.seleZhanji.visible = true;
-					
-					_skin.zhanjiNormal.visible = false;
-					_skin.zhanjiDown.visible = true;
-					
-//					_skin.zhanjiBtn_c.visible=true;
-//					_skin.chongchiBtn_r.visible=true;//充值
-//					_skin.activityBtn_r.visible=true;//活动
-//					_skin.datingBtn_r.visible=true;//大厅
-//					_skin.fankuiBtn_r.visible=true;//反馈
 					break;
 				case 4://活动
-					//_skin.seleAct.visible = true;
-					
-					_skin.actNormal.visible = false;
-					_skin.actDown.visible = true;
-					
-//					_skin.activityBtn_c.visible=true;
-//					_skin.chongchiBtn_r.visible=true;//充值
-//					_skin.datingBtn_l.visible=true;//大厅
-//					_skin.fankuiBtn_l.visible=true;//反馈
-//					_skin.zhanjiBtn_l.visible=true;//战绩
 					break;
 				default:
-//					_skin.datingBtn_c.visible=true;
-//					_skin.activityBtn_r.visible=true;//活动
-//					_skin.chongchiBtn_r.visible=true;//充值
-//					_skin.fankuiBtn_l.visible=true;//反馈
-//					_skin.zhanjiBtn_l.visible=true;//战绩
+
 					break;
 			}
 		}
@@ -207,7 +176,7 @@ package hall.view
 			removeAll();
 			this.reset();
 			this.mainView.show();
-			this.state=0;
+			this.state=2;
 			this.shareCall();
 		}
 		//活动
@@ -218,7 +187,6 @@ package hall.view
 			if(v==0)
 			{
 				QuickUtils.setLocalVar("viewAct",1);
-				_skin.actNewImg.visible = false;
 			}
 			
 			this.reset();
@@ -237,8 +205,9 @@ package hall.view
 			
 //			Browser.window.weui.alert("暂未开放");
 			this.reset();
-			this._agentView.show();//充值
-			this.state=1;
+			this._rechargeView.show();
+			//this._agentView.show();//充值
+			this.state=0;
 			this.shareCall();
 		}
 		//反馈
@@ -247,7 +216,7 @@ package hall.view
 			removeAll();
 			this.reset();
 			this._feedbackView.show();//反馈
-			this.state=2;
+			this.state=3;
 			this.shareCall();
 		}
 		//战绩
@@ -257,7 +226,7 @@ package hall.view
 			removeAll();
 			this.reset();
 			_onPlayView.show();
-			this.state=3;
+			this.state=4;
 			var getRecord:Object = {"type":0};
 			EventCenter.instance.event(EventCenter.SOCKET_SEND,ProtoMessage.getProtoMessage(Message.MSG_Home_Owner,getRecord));
 			this.shareCall();
@@ -316,49 +285,6 @@ package hall.view
 		
 		private function reset():void
 		{
-			
-			_skin.chongNormal.visible = true;
-			_skin.chongDown.visible = false;
-			
-			_skin.actNormal.visible = true;
-			_skin.actDown.visible = false;
-			
-			_skin.homeNormal.visible = true;
-			_skin.homeDown.visible = false;
-			
-			_skin.fankuiNormal.visible = true;
-			_skin.fankuiDown.visible = false;
-			
-			_skin.zhanjiNormal.visible = true;
-			_skin.zhanjiDown.visible = false;
-			
-			
-			_skin.seleHome.visible = false;
-			_skin.seleChong.visible = false;
-			_skin.seleAct.visible = false;
-			_skin.seleFankui.visible = false;
-			_skin.seleZhanji.visible = false;
-
-			
-			
-			//大厅首页
-//			_skin.datingBtn_r.visible=false;
-//			_skin.datingBtn_c.visible=false;
-//			_skin.datingBtn_l.visible=false;
-//			//活动
-//			_skin.activityBtn_r.visible=false;
-//			_skin.activityBtn_c.visible=false;
-//			_skin.activityBtn_l.visible=false;
-//			//充值
-//			_skin.chongchiBtn_r.visible=false;
-//			_skin.chongchiBtn_c.visible=false;
-//			//反馈
-//			_skin.fankuiBtn_l.visible=false;
-//			_skin.fankuiBtn_c.visible=false;
-//			_skin.fankuiBtn_r.visible=false;
-//			//战绩
-//			_skin.zhanjiBtn_l.visible=false;
-//			_skin.zhanjiBtn_c.visible=false;
 		}
 		
 		private function removeAll():void

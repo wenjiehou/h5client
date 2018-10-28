@@ -212,4 +212,14 @@
    <item name="hall/huaihuamj.png" type="Button" compress="0" pack="0" quality="80" props="" picType="0" scale="0"/>
    <item name="common/tab.png" type="Button" compress="0" pack="0" quality="80" props="sizeGrid=0,64,0,66" picType="0" scale="0"/>
    <item name="common/titleTab.png" type="Tab" compress="0" pack="0" quality="80" props="sizeGrid=0,64,0,64" picType="0" scale="0"/>
+   <item name="hall/gameBtn.png" type="Tab" compress="0" pack="0" quality="80" props="" picType="0" scale="0"/>
+   <item name="hall/paoBg.png" type="Image" compress="0" pack="0" quality="80" props="sizeGrid=10,17,14,19" picType="0" scale="0"/>
+   <item name="hall/joinBtn.png" type="Image" compress="0" pack="0" quality="80" props="sizeGrid=0,17,0,20" picType="0" scale="0"/>
+   <item name="hall/yuejuBtn.png" type="Button" compress="0" pack="0" quality="80" props="sizeGrid=14,17,19,19" picType="0" scale="0"/>
+   <item name="hall/jinbiBtn.png" type="Button" compress="0" pack="0" quality="80" props="sizeGrid=17,18,19,19" picType="0" scale="0"/>
+   <item name="hall/typeBtn.png" type="Tab" compress="0" pack="0" quality="80" props="sizeGrid=0,69,0,67" picType="0" scale="0"/>
+   <item name="hall/chujiBtn.png" type="Button" compress="0" pack="0" quality="80" props="sizeGrid=14,12,11,13" picType="0" scale="0"/>
+   <item name="hall/zhongjiBtn.png" type="Button" compress="0" pack="0" quality="80" props="sizeGrid=13,12,12,13" picType="0" scale="0"/>
+   <item name="hall/gaojiBtn.png" type="Button" compress="0" pack="0" quality="80" props="sizeGrid=13,12,11,13" picType="0" scale="0"/>
+   <item name="hall/hallDi.png" type="Tab" compress="0" pack="0" quality="80" props="" picType="0" scale="0"/>
 </res>

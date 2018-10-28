@@ -206,8 +206,8 @@ var Laya=window.Laya=(function(window,document){
 (function(window,document,Laya){
 	var __un=Laya.un,__uns=Laya.uns,__static=Laya.static,__class=Laya.class,__getset=Laya.getset,__newvec=Laya.__newvec;
 Laya.interface('laya.ui.IItem');
-Laya.interface('laya.ui.IRender');
 Laya.interface('laya.ui.ISelect');
+Laya.interface('laya.ui.IRender');
 Laya.interface('laya.runtime.IMarket');
 Laya.interface('laya.filters.IFilter');
 Laya.interface('laya.display.ILayout');
@@ -6853,21 +6853,6 @@ var IkConstraintData=(function(){
 /**
 *@private
 */
-//class laya.ani.bone.SkinData
-var SkinData=(function(){
-	function SkinData(){
-		this.name=null;
-		this.slotArr=[];
-	}
-
-	__class(SkinData,'laya.ani.bone.SkinData');
-	return SkinData;
-})()
-
-
-/**
-*@private
-*/
 //class laya.ani.bone.Transform
 var Transform=(function(){
 	function Transform(){
@@ -6937,60 +6922,6 @@ var Transform=(function(){
 	}
 
 	return Transform;
-})()
-
-
-/**
-*用于UV转换的工具类
-*@private
-*/
-//class laya.ani.bone.UVTools
-var UVTools=(function(){
-	function UVTools(){}
-	__class(UVTools,'laya.ani.bone.UVTools');
-	UVTools.getRelativeUV=function(bigUV,smallUV,rst){
-		var startX=bigUV[0];
-		var width=bigUV[2]-bigUV[0];
-		var startY=bigUV[1];
-		var height=bigUV[5]-bigUV[1];
-		if(!rst)rst=[];
-		rst.length=smallUV.length;
-		var i=0,len=0;
-		len=rst.length;
-		var dWidth=1 / width;
-		var dHeight=1 / height;
-		for (i=0;i < len;i+=2){
-			rst[i]=(smallUV[i]-startX)*dWidth;
-			rst[i+1]=(smallUV[i+1]-startY)*dHeight;
-		}
-		return rst;
-	}
-
-	UVTools.getAbsoluteUV=function(bigUV,smallUV,rst){
-		if (bigUV[0]==0 && bigUV[1]==0 && bigUV[4]==1 && bigUV[5]==1){
-			if (rst){
-				Utils.copyArray(rst,smallUV);
-				return rst;
-				}else{
-				return smallUV;
-			}
-		};
-		var startX=bigUV[0];
-		var width=bigUV[2]-bigUV[0];
-		var startY=bigUV[1];
-		var height=bigUV[5]-bigUV[1];
-		if(!rst)rst=[];
-		rst.length=smallUV.length;
-		var i=0,len=0;
-		len=rst.length;
-		for (i=0;i < len;i+=2){
-			rst[i]=smallUV[i]*width+startX;
-			rst[i+1]=smallUV[i+1]*height+startY;
-		}
-		return rst;
-	}
-
-	return UVTools;
 })()
 
 
@@ -19122,6 +19053,47 @@ var EarcutNode=(function(){
 })()
 
 
+//class laya.webgl.shapes.GeometryData
+var GeometryData=(function(){
+	function GeometryData(lineWidth,lineColor,lineAlpha,fillColor,fillAlpha,fill,shape){
+		//this.lineWidth=NaN;
+		//this.lineColor=NaN;
+		//this.lineAlpha=NaN;
+		//this.fillColor=NaN;
+		//this.fillAlpha=NaN;
+		//this.shape=null;
+		//this.fill=false;
+		this.lineWidth=lineWidth;
+		this.lineColor=lineColor;
+		this.lineAlpha=lineAlpha;
+		this.fillColor=fillColor;
+		this.fillAlpha=fillAlpha;
+		this.shape=shape;
+		this.fill=fill;
+	}
+
+	__class(GeometryData,'laya.webgl.shapes.GeometryData');
+	var __proto=GeometryData.prototype;
+	__proto.clone=function(){
+		return new GeometryData(this.lineWidth,this.lineColor,this.lineAlpha,this.fillColor,this.fillAlpha,this.fill,this.shape);
+	}
+
+	__proto.getIndexData=function(){
+		return null;
+	}
+
+	__proto.getVertexData=function(){
+		return null;
+	}
+
+	__proto.destroy=function(){
+		this.shape=null;
+	}
+
+	return GeometryData;
+})()
+
+
 //class laya.webgl.submit.Submit
 var Submit=(function(){
 	function Submit(renderType){
@@ -23348,7 +23320,7 @@ var HallLayer=(function(_super){
 		this.state=0;
 		this._skin=null;
 		this._mainView=null;
-		//protected var _rechargeView:RechargeView;
+		this._rechargeView=null;
 		this._agentView=null;
 		//protected var _recordView:RecordView;
 		this._onPlayView=null;
@@ -23360,6 +23332,7 @@ var HallLayer=(function(_super){
 		HallLayer.__super.call(this);
 		this.skinRes="res/atlas/hall.atlas";
 		this._mainView=new HMainView();
+		this._rechargeView=new RechargeView();
 		this._agentView=new AgentView();
 		this._onPlayView=new OnPlayView();
 		this._feedbackView=new FeedbackView();
@@ -23381,7 +23354,7 @@ var HallLayer=(function(_super){
 			if(UserData.isPreReplay){
 				this.removeAll();
 				this.reset();
-				this.state=3;
+				this.state=4;
 				this._onPlayView.show();
 				this._onPlayView.detailListView.show();
 				UserData.isPreReplay=false;
@@ -23400,43 +23373,46 @@ var HallLayer=(function(_super){
 
 	__proto.init=function(){
 		this.gotoHall();
-		this._skin.homeBtn.on("click",this,this.gotoHall);
-		this._skin.actBtn.on("click",this,this.share);
-		this._skin.chongBtn.on("click",this,this.recharge);
-		this._skin.fankuiBtn.on("click",this,this.feedBack);
-		this._skin.zhanjiBtn.on("click",this,this.record);
+		this._skin.btnTab.selectHandler=Handler.create(this,this.onSwitchTab,null,false);
 		var t=QuickUtils.getLocalVar("viewAct",0);
 		if(t==1){
-			this._skin.actNewImg.visible=false;
 		}
 		else{
-			this._skin.actNewImg.visible=true;
 		}
 	}
 
 	// EventCenter.instance.on(EventCenter.HALL_SHOW_REPORTVIEW,this,onRecord);
+	__proto.onSwitchTab=function(idx){
+		switch(idx){
+			case 0:
+				this.recharge();
+				break ;
+			case 1:
+				break ;
+			case 2:
+				this.gotoHall();
+				break ;
+			case 3:
+				this.feedBack();
+				break ;
+			case 4:
+				this.record();
+				break ;
+			}
+	}
+
 	__proto.shareCall=function(){
 		this.reset();
 		switch(this.state){
 			case 0:
-				this._skin.homeNormal.visible=false;
-				this._skin.homeDown.visible=true;
 				break ;
 			case 1:
-				this._skin.chongNormal.visible=false;
-				this._skin.chongDown.visible=true;
 				break ;
 			case 2:
-				this._skin.fankuiNormal.visible=false;
-				this._skin.fankuiDown.visible=true;
 				break ;
 			case 3:
-				this._skin.zhanjiNormal.visible=false;
-				this._skin.zhanjiDown.visible=true;
 				break ;
 			case 4:
-				this._skin.actNormal.visible=false;
-				this._skin.actDown.visible=true;
 				break ;
 			default :
 				break ;
@@ -23448,7 +23424,7 @@ var HallLayer=(function(_super){
 		this.removeAll();
 		this.reset();
 		this.mainView.show();
-		this.state=0;
+		this.state=2;
 		this.shareCall();
 	}
 
@@ -23457,7 +23433,6 @@ var HallLayer=(function(_super){
 		var v=QuickUtils.getLocalVar("viewAct",0);
 		if(v==0){
 			QuickUtils.setLocalVar("viewAct",1);
-			this._skin.actNewImg.visible=false;
 		}
 		this.reset();
 		this._activityView.show();
@@ -23472,8 +23447,8 @@ var HallLayer=(function(_super){
 			return;
 		}
 		this.reset();
-		this._agentView.show();
-		this.state=1;
+		this._rechargeView.show();
+		this.state=0;
 		this.shareCall();
 	}
 
@@ -23482,7 +23457,7 @@ var HallLayer=(function(_super){
 		this.removeAll();
 		this.reset();
 		this._feedbackView.show();
-		this.state=2;
+		this.state=3;
 		this.shareCall();
 	}
 
@@ -23491,7 +23466,7 @@ var HallLayer=(function(_super){
 		this.removeAll();
 		this.reset();
 		this._onPlayView.show();
-		this.state=3;
+		this.state=4;
 		var getRecord={"type":0};
 		EventCenter.instance.event("SOCKET_SEND",ProtoMessage.getProtoMessage(403,getRecord));
 		this.shareCall();
@@ -23530,25 +23505,7 @@ var HallLayer=(function(_super){
 		}
 	}
 
-	__proto.reset=function(){
-		this._skin.chongNormal.visible=true;
-		this._skin.chongDown.visible=false;
-		this._skin.actNormal.visible=true;
-		this._skin.actDown.visible=false;
-		this._skin.homeNormal.visible=true;
-		this._skin.homeDown.visible=false;
-		this._skin.fankuiNormal.visible=true;
-		this._skin.fankuiDown.visible=false;
-		this._skin.zhanjiNormal.visible=true;
-		this._skin.zhanjiDown.visible=false;
-		this._skin.seleHome.visible=false;
-		this._skin.seleChong.visible=false;
-		this._skin.seleAct.visible=false;
-		this._skin.seleFankui.visible=false;
-		this._skin.seleZhanji.visible=false;
-	}
-
-	// _skin.zhanjiBtn_c.visible=false;
+	__proto.reset=function(){}
 	__proto.removeAll=function(){
 		this._mainView.hide();
 		this._agentView.hide();
@@ -23704,12 +23661,11 @@ var HMainView=(function(_super){
 
 	// });
 	__proto.updataDiamond=function(){
-		this._skin.diamondTf.text=UserData.Diamond+"";
 		this._skin.coinTf.text=UserData.Coin+"";
 		console.log(UserData.Diamond)
-		this._skin.idTf.text="ID:"+UserData.uid;
 	}
 
+	//_skin.idTf.text="ID:"+UserData.uid;
 	__proto.updateUI=function(){
 		if(!this._skin){
 			return;
@@ -24100,6 +24056,144 @@ var JoinRView=(function(_super){
 	}
 
 	return JoinRView;
+})(UIBase)
+
+
+//class hall.view.RechargeView extends common.baseui.UIBase
+var RechargeView=(function(_super){
+	function RechargeView(container){
+		this._skin=null;
+		this.data=[];
+		// private var cargoList:Array=[{"id":1,"diamond":200,"odiamond":100,"title":"100\u94bb\u77f3","price":100,"discount":100},{"id":2,"diamond":2000,"odiamond":1000,"title":"1000\u94bb\u77f3","price":1000,"discount":90.91},{"id":3,"diamond":10000,"odiamond":5000,"title":"5000\u94bb\u77f3","price":5000,"discount":86.21},{"id":4,"diamond":20000,"odiamond":10000,"title":"10000\u94bb\u77f3","price":10000,"discount":83.33},{"id":5,"diamond":100000,"odiamond":50000,"title":"50000\u94bb\u77f3","price":50000,"discount":75.76}]//Browser.window.cargoList;
+		this.hr=null;
+		this.isTest=true;
+		RechargeView.__super.call(this,container);
+		this.skinRes="";
+	}
+
+	__class(RechargeView,'hall.view.RechargeView',_super);
+	var __proto=RechargeView.prototype;
+	__proto.onLoaded=function(){
+		_super.prototype.onLoaded.call(this);
+		this._skin=new RechargeViewUI();
+		this._skin.mouseEnabled=true;
+		if(this._isShow){
+			this.container.addChild(this._skin);
+		}
+		this.init();
+	}
+
+	__proto.init=function(){
+		var _$this=this;
+		this._skin.rech_list.repeatY=0;
+		this._skin.rech_list.vScrollBarSkin="";
+		this._skin.rech_list.renderHandler=new Handler(this,this.onRender);
+		this._skin.rech_list.mouseHandler=new Handler(this,function(e,index){
+			if(e.type!="click")return;
+			if(! (e.target instanceof laya.ui.Button ))return;
+			_$this.hr=new HttpRequest();
+			_$this.hr.once("complete",this,function(e){
+				var response=JSON.parse(_$this.hr.data);
+				if (response.status==1){
+					WX.wx.chooseWXPay({
+						timestamp:response.timeStamp,
+						nonceStr:response.nonceStr,
+						'package':response["package"],
+						signType:response.signType,
+						paySign:response.sign,
+						success:function (res){
+							var obj={id:UserData.uid};
+							Laya.timer.once(1000,this,function(){
+								EventCenter.instance.event("SOCKET_SEND",ProtoMessage.getProtoMessage(990,obj));
+							})
+							console.log(obj)
+						}
+					});
+					}else {
+					Browser.window.weui.alert(response);
+				}
+				console.log(_$this.hr.data,"-*---------------------------")
+			});
+			var data={
+				cargoId:e.target['tag'],
+				open_id:Browser.window.wxInfo.openid
+			};
+			var query=[];
+			for(var k in data){
+				query.push(k+"="+encodeURIComponent(data[k]));
+			}
+			data=query.join("&");
+			_$this.hr.send("phpApi/api/getPayinfo.php",data,"post","text");
+		})
+		this._skin.rech_list.array=this.data;
+		this._skin.rech_list.refresh();
+	}
+
+	/**跟新数据*/
+	__proto.updateData=function(){
+		if(this.isTest){
+			var testData='{"info": {"type": "2", "list": [{"price": 100, "diamond": 100, "payid": 1001, "giveaway": 100}, {"price": 1000, "diamond": 1000, "payid": 2001, "giveaway": 1000}, {"price": 5000, "diamond": 5000, "payid": 3001, "giveaway": 5000}, {"price": 10000, "diamond": 10000, "payid": 4001, "giveaway": 10000}, {"price": 50000, "diamond": 50000, "payid": 5001, "giveaway": 50000}]}, "status": 1, "url": ""}';
+			this.onRequestCompete(testData);
+		}
+		else{
+			var http=new HttpRequest();
+			http.on("complete",this,this.onRequestCompete);
+			http.send("phpApi/api/getRechargeList.php",null,"get","text");
+		}
+	}
+
+	//http.send("../wechat/api/paylist",null,"get","text");
+	__proto.onRequestCompete=function(dat){
+		var info=JSON.parse(dat);
+		if(info.status !=1){
+			return;
+		};
+		var type=parseInt(info.info.type);
+		var list=info.info.list;
+		var i=0,len=list.length;
+		for(i=0;i<len;i++){
+			list[i].type=i+1;
+		}
+		this.data=list;
+		this._skin.rech_list.array=this.data;
+		this._skin.rech_list.refresh();
+	}
+
+	//渲染list列表数据
+	__proto.onRender=function(cell,index){
+		if(index > this.data.length)return;
+		var data=this.data[index];
+		var Diamonds=cell.getChildByName("Diamonds");
+		Diamonds.text=""
+		Diamonds.text=""+data.diamond;
+		var money=cell.getChildByName("dis");
+		money.text=""+data.giveaway;
+		var priceDis=cell.getChildByName("priceDis");
+		priceDis.skin="";
+		priceDis.skin="hall/type_"+data.type+".png";
+		var recharge=cell.getChildByName("recharge");
+		recharge.tag=data.payid;
+		var mon=cell.getChildByName("mon");
+		mon.text="";
+		mon.text="¥"+data.price/100+"元";
+	}
+
+	__proto.show=function(){
+		_super.prototype.show.call(this);
+		if(this._skin){
+			this.container.addChild(this._skin);
+		}
+		this.updateData();
+	}
+
+	__proto.hide=function(){
+		_super.prototype.hide.call(this);
+		if(this._skin && this._skin.parent){
+			this._skin.parent.removeChild(this._skin);
+		}
+	}
+
+	return RechargeView;
 })(UIBase)
 
 
@@ -35020,6 +35114,390 @@ var MovieClip=(function(_super){
 
 
 /**
+*<code>Video</code>将视频显示到Canvas上。<code>Video</code>可能不会在所有浏览器有效。
+*<p>关于Video支持的所有事件参见：<i>http://www.w3school.com.cn/tags/html_ref_audio_video_dom.asp</i>。</p>
+*<p>
+*<b>注意：</b><br/>
+*在PC端可以在任何时机调用<code>play()</code>因此，可以在程序开始运行时就使Video开始播放。但是在移动端，只有在用户第一次触碰屏幕后才可以调用play()，所以移动端不可能在程序开始运行时就自动开始播放Video。
+*</p>
+*
+*<p>MDN Video链接： <i>https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video</i></p>
+*/
+//class laya.device.media.Video extends laya.display.Sprite
+var Video=(function(_super){
+	function Video(width,height){
+		this.htmlVideo=null;
+		this.videoElement=null;
+		this.internalTexture=null;
+		(width===void 0)&& (width=320);
+		(height===void 0)&& (height=240);
+		Video.__super.call(this);
+		if (Render.isWebGL)
+			this.htmlVideo=new WebGLVideo();
+		else
+		this.htmlVideo=new HtmlVideo();
+		this.videoElement=this.htmlVideo.getVideo();
+		this.videoElement.layaTarget=this;
+		this.internalTexture=new Texture(this.htmlVideo);
+		this.videoElement.addEventListener("abort",Video.onAbort);
+		this.videoElement.addEventListener("canplay",Video.onCanplay);
+		this.videoElement.addEventListener("canplaythrough",Video.onCanplaythrough);
+		this.videoElement.addEventListener("durationchange",Video.onDurationchange);
+		this.videoElement.addEventListener("emptied",Video.onEmptied);
+		this.videoElement.addEventListener("error",Video.onError);
+		this.videoElement.addEventListener("loadeddata",Video.onLoadeddata);
+		this.videoElement.addEventListener("loadedmetadata",Video.onLoadedmetadata);
+		this.videoElement.addEventListener("loadstart",Video.onLoadstart);
+		this.videoElement.addEventListener("pause",Video.onPause);
+		this.videoElement.addEventListener("play",Video.onPlay);
+		this.videoElement.addEventListener("playing",Video.onPlaying);
+		this.videoElement.addEventListener("progress",Video.onProgress);
+		this.videoElement.addEventListener("ratechange",Video.onRatechange);
+		this.videoElement.addEventListener("seeked",Video.onSeeked);
+		this.videoElement.addEventListener("seeking",Video.onSeeking);
+		this.videoElement.addEventListener("stalled",Video.onStalled);
+		this.videoElement.addEventListener("suspend",Video.onSuspend);
+		this.videoElement.addEventListener("timeupdate",Video.onTimeupdate);
+		this.videoElement.addEventListener("volumechange",Video.onVolumechange);
+		this.videoElement.addEventListener("waiting",Video.onWaiting);
+		this.videoElement.addEventListener("ended",this.onPlayComplete['bind'](this));
+		this.size(width,height);
+		if (Browser.onMobile){
+			this.onDocumentClick=this.onDocumentClick.bind(this);
+			Browser.document.addEventListener("touchend",this.onDocumentClick);
+		}
+	}
+
+	__class(Video,'laya.device.media.Video',_super);
+	var __proto=Video.prototype;
+	__proto.onPlayComplete=function(e){
+		Laya.timer.clear(this,this.renderCanvas);
+		this.event("ended");
+	}
+
+	/**
+	*设置播放源。
+	*@param url 播放源路径。
+	*/
+	__proto.load=function(url){
+		if (url.indexOf("blob:")==0)
+			this.videoElement.src=url;
+		else
+		this.htmlVideo.setSource(url,laya.device.media.Video.MP4);
+	}
+
+	/**
+	*开始播放视频。
+	*/
+	__proto.play=function(){
+		this.videoElement.play();
+		Laya.timer.frameLoop(1,this,this.renderCanvas);
+	}
+
+	/**
+	*暂停视频播放。
+	*/
+	__proto.pause=function(){
+		this.videoElement.pause();
+		Laya.timer.clear(this,this.renderCanvas);
+	}
+
+	/**
+	*重新加载视频。
+	*/
+	__proto.reload=function(){
+		this.videoElement.load();
+	}
+
+	/**
+	*检测是否支持播放指定格式视频。
+	*@param type 参数为Video.MP4 / Video.OGG / Video.WEBM之一。
+	*@return 表示支持的级别。可能的值：
+	*<ul>
+	*<li>"probably"，Video.SUPPORT_PROBABLY-浏览器最可能支持该音频/视频类型</li>
+	*<li>"maybe"，Video.SUPPORT_MAYBY-浏览器也许支持该音频/视频类型</li>
+	*<li>""，Video.SUPPORT_NO-（空字符串）浏览器不支持该音频/视频类型</li>
+	*</ul>
+	*/
+	__proto.canPlayType=function(type){
+		var typeString;
+		switch (type){
+			case laya.device.media.Video.MP4:
+				typeString="video/mp4";
+				break ;
+			case laya.device.media.Video.OGG:
+				typeString="video/ogg";
+				break ;
+			case laya.device.media.Video.WEBM:
+				typeString="video/webm";
+				break ;
+			}
+		return this.videoElement.canPlayType(typeString);
+	}
+
+	__proto.renderCanvas=function(){
+		if (this.readyState===0)
+			return;
+		if (Render.isWebGL)
+			this.htmlVideo['updateTexture']();
+		this.graphics.clear();
+		this.graphics.drawTexture(this.internalTexture,0,0,this.width,this.height);
+	}
+
+	__proto.onDocumentClick=function(){
+		this.videoElement.play();
+		this.videoElement.pause();
+		Browser.document.removeEventListener("touchend",this.onDocumentClick);
+	}
+
+	__proto.size=function(width,height){
+		_super.prototype.size.call(this,width,height)
+		this.videoElement.width=width / Browser.pixelRatio;
+		if (this.paused)this.renderCanvas();
+		return this;
+	}
+
+	/**
+	*销毁内部事件绑定。
+	*/
+	__proto.destroy=function(detroyChildren){
+		(detroyChildren===void 0)&& (detroyChildren=true);
+		_super.prototype.destroy.call(this,detroyChildren);
+		this.videoElement.removeEventListener("abort",Video.onAbort);
+		this.videoElement.removeEventListener("canplay",Video.onCanplay);
+		this.videoElement.removeEventListener("canplaythrough",Video.onCanplaythrough);
+		this.videoElement.removeEventListener("durationchange",Video.onDurationchange);
+		this.videoElement.removeEventListener("emptied",Video.onEmptied);
+		this.videoElement.removeEventListener("error",Video.onError);
+		this.videoElement.removeEventListener("loadeddata",Video.onLoadeddata);
+		this.videoElement.removeEventListener("loadedmetadata",Video.onLoadedmetadata);
+		this.videoElement.removeEventListener("loadstart",Video.onLoadstart);
+		this.videoElement.removeEventListener("pause",Video.onPause);
+		this.videoElement.removeEventListener("play",Video.onPlay);
+		this.videoElement.removeEventListener("playing",Video.onPlaying);
+		this.videoElement.removeEventListener("progress",Video.onProgress);
+		this.videoElement.removeEventListener("ratechange",Video.onRatechange);
+		this.videoElement.removeEventListener("seeked",Video.onSeeked);
+		this.videoElement.removeEventListener("seeking",Video.onSeeking);
+		this.videoElement.removeEventListener("stalled",Video.onStalled);
+		this.videoElement.removeEventListener("suspend",Video.onSuspend);
+		this.videoElement.removeEventListener("timeupdate",Video.onTimeupdate);
+		this.videoElement.removeEventListener("volumechange",Video.onVolumechange);
+		this.videoElement.removeEventListener("waiting",Video.onWaiting);
+		this.videoElement.removeEventListener("ended",this.onPlayComplete);
+		this.pause();
+		this.videoElement=null;
+	}
+
+	__proto.syncVideoPosition=function(){
+		var stage=Laya.stage;
+		var rec;
+		rec=Utils.getGlobalPosAndScale(this);
+		var a=stage._canvasTransform.a,d=stage._canvasTransform.d;
+		var x=rec.x *stage.clientScaleX *a+stage.offset.x;
+		var y=rec.y *stage.clientScaleY *d+stage.offset.y;
+		this.videoElement.style.left=x+'px';;
+		this.videoElement.style.top=y+'px';
+		this.videoElement.width=this.width / Browser.pixelRatio;
+		this.videoElement.height=this.height / Browser.pixelRatio;
+	}
+
+	/**
+	*buffered 属性返回 TimeRanges(JS)对象。TimeRanges 对象表示用户的音视频缓冲范围。缓冲范围指的是已缓冲音视频的时间范围。如果用户在音视频中跳跃播放，会得到多个缓冲范围。
+	*<p>buffered.length返回缓冲范围个数。如获取第一个缓冲范围则是buffered.start(0)和buffered.end(0)。以秒计。</p>
+	*@return TimeRanges(JS)对象
+	*/
+	__getset(0,__proto,'buffered',function(){
+		return this.videoElement.buffered;
+	});
+
+	/**
+	*获取视频源尺寸。ready事件触发后可用。
+	*/
+	__getset(0,__proto,'videoWidth',function(){
+		return this.videoElement.videoWidth;
+	});
+
+	/**
+	*获取当前播放源路径。
+	*/
+	__getset(0,__proto,'currentSrc',function(){
+		return this.videoElement.currentSrc;
+	});
+
+	/**
+	*设置和获取当前播放头位置。
+	*/
+	__getset(0,__proto,'currentTime',function(){
+		return this.videoElement.currentTime;
+		},function(value){
+		this.videoElement.currentTime=value;
+		this.renderCanvas();
+	});
+
+	/**
+	*返回音频/视频的播放是否已结束
+	*/
+	__getset(0,__proto,'ended',function(){
+		return this.videoElement.ended;
+	});
+
+	/**
+	*设置和获取当前音量。
+	*/
+	__getset(0,__proto,'volume',function(){
+		return this.videoElement.volume;
+		},function(value){
+		this.videoElement.volume=value;
+	});
+
+	__getset(0,__proto,'videoHeight',function(){
+		return this.videoElement.videoHeight;
+	});
+
+	/**
+	*表示视频元素的就绪状态：
+	*<ul>
+	*<li>0=HAVE_NOTHING-没有关于音频/视频是否就绪的信息</li>
+	*<li>1=HAVE_METADATA-关于音频/视频就绪的元数据</li>
+	*<li>2=HAVE_CURRENT_DATA-关于当前播放位置的数据是可用的，但没有足够的数据来播放下一帧/毫秒</li>
+	*<li>3=HAVE_FUTURE_DATA-当前及至少下一帧的数据是可用的</li>
+	*<li>4=HAVE_ENOUGH_DATA-可用数据足以开始播放</li>
+	*</ul>
+	*/
+	__getset(0,__proto,'readyState',function(){
+		return this.videoElement.readyState;
+	});
+
+	/**
+	*获取视频长度（秒）。ready事件触发后可用。
+	*/
+	__getset(0,__proto,'duration',function(){
+		return this.videoElement.duration;
+	});
+
+	/**
+	*返回表示音频/视频错误状态的 MediaError（JS）对象。
+	*/
+	__getset(0,__proto,'error',function(){
+		return this.videoElement.error;
+	});
+
+	/**
+	*设置或返回音频/视频是否应在结束时重新播放。
+	*/
+	__getset(0,__proto,'loop',function(){
+		return this.videoElement.loop;
+		},function(value){
+		this.videoElement.loop=value;
+	});
+
+	/**
+	*playbackRate 属性设置或返回音频/视频的当前播放速度。如：
+	*<ul>
+	*<li>1.0 正常速度</li>
+	*<li>0.5 半速（更慢）</li>
+	*<li>2.0 倍速（更快）</li>
+	*<li>-1.0 向后，正常速度</li>
+	*<li>-0.5 向后，半速</li>
+	*</ul>
+	*<p>只有 Google Chrome 和 Safari 支持 playbackRate 属性。</p>
+	*/
+	__getset(0,__proto,'playbackRate',function(){
+		return this.videoElement.playbackRate;
+		},function(value){
+		this.videoElement.playbackRate=value;
+	});
+
+	/**
+	*获取和设置静音状态。
+	*/
+	__getset(0,__proto,'muted',function(){
+		return this.videoElement.muted;
+		},function(value){
+		this.videoElement.muted=value;
+	});
+
+	/**
+	*返回视频是否暂停
+	*/
+	__getset(0,__proto,'paused',function(){
+		return this.videoElement.paused;
+	});
+
+	/**
+	*preload 属性设置或返回是否在页面加载后立即加载视频。可赋值如下：
+	*<ul>
+	*<li>auto 指示一旦页面加载，则开始加载视频。</li>
+	*<li>metadata 指示当页面加载后仅加载音频/视频的元数据。</li>
+	*<li>none 指示页面加载后不应加载音频/视频。</li>
+	*</ul>
+	*/
+	__getset(0,__proto,'preload',function(){
+		return this.videoElement.preload;
+		},function(value){
+		this.videoElement.preload=value;
+	});
+
+	/**
+	*参见 <i>http://www.w3school.com.cn/tags/av_prop_seekable.asp</i>。
+	*/
+	__getset(0,__proto,'seekable',function(){
+		return this.videoElement.seekable;
+	});
+
+	/**
+	*seeking 属性返回用户目前是否在音频/视频中寻址。
+	*寻址中（Seeking）指的是用户在音频/视频中移动/跳跃到新的位置。
+	*/
+	__getset(0,__proto,'seeking',function(){
+		return this.videoElement.seeking;
+	});
+
+	__getset(0,__proto,'height',_super.prototype._$get_height,function(value){
+		Laya.superSet(Sprite,this,'height',value);
+		if (this.paused)this.renderCanvas();
+	});
+
+	__getset(0,__proto,'width',_super.prototype._$get_width,function(value){
+		this.videoElement.width=this.width / Browser.pixelRatio;
+		Laya.superSet(Sprite,this,'width',value);
+		if (this.paused)this.renderCanvas();
+	});
+
+	Video.onAbort=function(e){e.target.layaTarget.event("abort")}
+	Video.onCanplay=function(e){e.target.layaTarget.event("canplay")}
+	Video.onCanplaythrough=function(e){e.target.layaTarget.event("canplaythrough")}
+	Video.onDurationchange=function(e){e.target.layaTarget.event("durationchange")}
+	Video.onEmptied=function(e){e.target.layaTarget.event("emptied")}
+	Video.onError=function(e){e.target.layaTarget.event("error")}
+	Video.onLoadeddata=function(e){e.target.layaTarget.event("loadeddata")}
+	Video.onLoadedmetadata=function(e){e.target.layaTarget.event("loadedmetadata")}
+	Video.onLoadstart=function(e){e.target.layaTarget.event("loadstart")}
+	Video.onPause=function(e){e.target.layaTarget.event("pause")}
+	Video.onPlay=function(e){e.target.layaTarget.event("play")}
+	Video.onPlaying=function(e){e.target.layaTarget.event("playing")}
+	Video.onProgress=function(e){e.target.layaTarget.event("progress")}
+	Video.onRatechange=function(e){e.target.layaTarget.event("ratechange")}
+	Video.onSeeked=function(e){e.target.layaTarget.event("seeked")}
+	Video.onSeeking=function(e){e.target.layaTarget.event("seeking")}
+	Video.onStalled=function(e){e.target.layaTarget.event("stalled")}
+	Video.onSuspend=function(e){e.target.layaTarget.event("suspend")}
+	Video.onTimeupdate=function(e){e.target.layaTarget.event("timeupdate")}
+	Video.onVolumechange=function(e){e.target.layaTarget.event("volumechange")}
+	Video.onWaiting=function(e){e.target.layaTarget.event("waiting")}
+	Video.MP4=1;
+	Video.OGG=2;
+	Video.CAMERA=4;
+	Video.WEBM=8;
+	Video.SUPPORT_PROBABLY="probably";
+	Video.SUPPORT_MAYBY="maybe";
+	Video.SUPPORT_NO="";
+	return Video;
+})(Sprite)
+
+
+/**
 *<p>动画播放基类，提供了基础的动画播放控制方法和帧标签事件相关功能。</p>
 *<p>可以继承此类，但不要直接实例化此类，因为有些方法需要由子类实现。</p>
 */
@@ -37102,6 +37580,62 @@ var HTMLElement=(function(_super){
 	HTMLElement._EMPTYTEXT={text:null,words:null};
 	return HTMLElement;
 })(Sprite)
+
+
+/**
+*@private
+*/
+//class laya.device.media.HtmlVideo extends laya.resource.Bitmap
+var HtmlVideo=(function(_super){
+	function HtmlVideo(){
+		this.video=null;
+		HtmlVideo.__super.call(this);
+		this._w=1;
+		this._h=1;
+		this.createDomElement();
+	}
+
+	__class(HtmlVideo,'laya.device.media.HtmlVideo',_super);
+	var __proto=HtmlVideo.prototype;
+	__proto.createDomElement=function(){
+		var _$this=this;
+		this._source=this.video=Browser.createElement("video");
+		var style=this.video.style;
+		style.position='absolute';
+		style.top='0px';
+		style.left='0px';
+		this.video.addEventListener("loadedmetadata",(function(){
+			this._w=_$this.video.videoWidth;
+			this._h=_$this.video.videoHeight;
+		})['bind'](this));
+	}
+
+	__proto.setSource=function(url,extension){
+		while(this.video.childElementCount)
+		this.video.firstChild.remove();
+		if (extension & Video.MP4)
+			this.appendSource(url,"video/mp4");
+		if (extension & Video.OGG)
+			this.appendSource(url+".ogg","video/ogg");
+	}
+
+	__proto.appendSource=function(source,type){
+		var sourceElement=Browser.createElement("source");
+		sourceElement.src=source;
+		sourceElement.type=type;
+		this.video.appendChild(sourceElement);
+	}
+
+	__proto.getVideo=function(){
+		return this.video;
+	}
+
+	HtmlVideo.create=function(){
+		return new HtmlVideo();
+	}
+
+	return HtmlVideo;
+})(Bitmap)
 
 
 /**
@@ -43511,6 +44045,43 @@ var HTMLStyleElement=(function(_super){
 
 /**
 *@private
+*/
+//class laya.device.media.WebGLVideo extends laya.device.media.HtmlVideo
+var WebGLVideo=(function(_super){
+	function WebGLVideo(){
+		this.gl=null;
+		this.preTarget=null;
+		this.preTexture=null;
+		WebGLVideo.__super.call(this);
+		if(Browser.onIPhone)
+			return;
+		this.gl=WebGL.mainContext;
+		this._source=this.gl.createTexture();
+		this.preTarget=WebGLContext.curBindTexTarget;
+		this.preTexture=WebGLContext.curBindTexValue;
+		WebGLContext.bindTexture(this.gl,0x0DE1,this._source);
+		this.gl.texParameteri(0x0DE1,0x2802,0x812F);
+		this.gl.texParameteri(0x0DE1,0x2803,0x812F);
+		this.gl.texParameteri(0x0DE1,0x2800,0x2601);
+		this.gl.texParameteri(0x0DE1,0x2801,0x2601);
+		(this.preTarget && this.preTexture)&& (WebGLContext.bindTexture(this.gl,this.preTarget,this.preTexture));
+	}
+
+	__class(WebGLVideo,'laya.device.media.WebGLVideo',_super);
+	var __proto=WebGLVideo.prototype;
+	__proto.updateTexture=function(){
+		if(Browser.onIPhone)
+			return;
+		WebGLContext.bindTexture(this.gl,0x0DE1,this._source);
+		this.gl.texImage2D(0x0DE1,0,0x1907,0x1907,0x1401,this.video);
+	}
+
+	return WebGLVideo;
+})(HtmlVideo)
+
+
+/**
+*@private
 *<p> <code>HTMLImage</code> 用于创建 HTML Image 元素。</p>
 *<p>请使用 <code>HTMLImage.create()<code>获取新实例，不要直接使用 <code>new HTMLImage<code> 。</p>
 */
@@ -48111,7 +48682,7 @@ var NoticeInfoViewUI=(function(_super){
 		this.createView(NoticeInfoViewUI.uiView);
 	}
 
-	NoticeInfoViewUI.uiView={"type":"View","props":{},"child":[{"type":"Image","props":{"y":0,"x":0,"width":590,"var":"bg","skin":"common/gameBg.png","sizeGrid":"34,32,34,34","mouseThrough":true,"height":411}},{"type":"Button","props":{"y":325,"x":218,"width":154,"var":"confirmBtn","stateNum":1,"skin":"common/buttonLv.png","labelSize":30,"labelPadding":"0,0,5,0","labelFont":"Helvetica","labelColors":"#ffffff,#ffffff,#ffffff","label":"确定","height":68,"sizeGrid":"0,29,0,27"}},{"type":"Label","props":{"y":11,"x":222,"width":146,"valign":"middle","text":"提示","height":65,"fontSize":34,"font":"SimHei","color":"#c7edfb","align":"center"}},{"type":"Image","props":{"y":82,"x":20,"width":550,"skin":"common/lanfengexian.png","height":2,"alpha":0.3,"sizeGrid":"0,3,0,3"}},{"type":"Image","props":{"y":100,"x":19,"width":552,"skin":"common/commonTitBg.png","height":205,"sizeGrid":"10,10,8,14"}},{"type":"HTMLDivElement","props":{"y":101,"x":27,"width":539,"var":"infoTf","innerHTML":"htmlText","height":183}}]};
+	NoticeInfoViewUI.uiView={"type":"View","props":{},"child":[{"type":"Image","props":{"y":0,"x":0,"width":590,"var":"bg","skin":"common/gameBg.png","sizeGrid":"34,32,34,34","mouseThrough":true,"height":411}},{"type":"Button","props":{"y":325,"x":218,"width":154,"var":"confirmBtn","stateNum":1,"skin":"common/buttonLv.png","labelSize":30,"labelPadding":"0,0,5,0","labelFont":"Helvetica","labelColors":"#ffffff,#ffffff,#ffffff","label":"确定","height":68,"sizeGrid":"0,29,0,27"}},{"type":"Label","props":{"y":11,"x":222,"width":146,"valign":"middle","text":"提示","height":65,"fontSize":34,"font":"SimHei","color":"#c7edfb","align":"center"}},{"type":"Image","props":{"y":100,"x":19,"width":552,"skin":"common/commonTitBg.png","height":205,"sizeGrid":"10,10,8,14"}},{"type":"HTMLDivElement","props":{"y":101,"x":27,"width":539,"var":"infoTf","innerHTML":"htmlText","height":183}}]};
 	return NoticeInfoViewUI;
 })(View)
 
@@ -48733,27 +49304,7 @@ var ActivityViewUI=(function(_super){
 //class ui.hall.BottomBtnUI extends laya.ui.View
 var BottomBtnUI=(function(_super){
 	function BottomBtnUI(){
-		this.actBtn=null;
-		this.actDown=null;
-		this.actNormal=null;
-		this.actNewImg=null;
-		this.seleChong=null;
-		this.seleAct=null;
-		this.seleHome=null;
-		this.seleFankui=null;
-		this.seleZhanji=null;
-		this.chongBtn=null;
-		this.chongDown=null;
-		this.chongNormal=null;
-		this.homeBtn=null;
-		this.homeNormal=null;
-		this.homeDown=null;
-		this.fankuiBtn=null;
-		this.fankuiDown=null;
-		this.fankuiNormal=null;
-		this.zhanjiBtn=null;
-		this.zhanjiDown=null;
-		this.zhanjiNormal=null;
+		this.btnTab=null;
 		BottomBtnUI.__super.call(this);
 	}
 
@@ -48764,7 +49315,7 @@ var BottomBtnUI=(function(_super){
 		this.createView(BottomBtnUI.uiView);
 	}
 
-	BottomBtnUI.uiView={"type":"View","props":{"width":640,"height":120},"child":[{"type":"Image","props":{"y":-23,"x":11,"skin":"hall/btn/btnDi.png"}},{"type":"Box","props":{"y":-21,"x":11,"scaleY":1.1,"scaleX":1.1},"child":[{"type":"Box","props":{"y":37,"x":93},"child":[{"type":"Button","props":{"y":0,"x":0,"width":93,"var":"actBtn","height":92},"child":[{"type":"Image","props":{"y":0,"x":0,"width":93,"var":"actDown","skin":"hall/btn/btnAct_down.png","height":92}},{"type":"Image","props":{"y":25,"x":13,"width":71,"var":"actNormal","skin":"hall/btn/btnAct.png","height":42}}]},{"type":"Image","props":{"y":-1,"x":71,"var":"actNewImg","skin":"common/xiaohongdian.png"}}]},{"type":"Image","props":{"y":109,"x":10.5,"var":"seleChong","skin":"hall/btn/sele.png","alpha":1}},{"type":"Image","props":{"y":109,"x":103.5,"var":"seleAct","skin":"hall/btn/sele.png","alpha":1}},{"type":"Image","props":{"y":109,"x":245,"var":"seleHome","skin":"hall/btn/sele.png","alpha":1}},{"type":"Image","props":{"y":109,"x":385.5,"var":"seleFankui","skin":"hall/btn/sele.png","alpha":1}},{"type":"Image","props":{"y":109,"x":478.5,"var":"seleZhanji","skin":"hall/btn/sele.png","alpha":1}},{"type":"Button","props":{"y":37,"x":-1,"width":93,"var":"chongBtn","height":92},"child":[{"type":"Image","props":{"y":0,"x":0,"width":93,"var":"chongDown","skin":"hall/btn/btnAgent_down.png","height":92}},{"type":"Image","props":{"y":25,"x":14,"width":71,"var":"chongNormal","skin":"hall/btn/btnAgent.png","height":42}}]},{"type":"Button","props":{"y":4,"x":193,"width":186,"var":"homeBtn","scaleY":0.94,"scaleX":0.94,"height":128},"child":[{"type":"Image","props":{"var":"homeNormal","skin":"hall/btn/btnHome.png"}},{"type":"Image","props":{"y":0,"x":0,"var":"homeDown","skin":"hall/btn/btnHome_down.png"}}]},{"type":"Button","props":{"y":37,"x":375,"width":93,"var":"fankuiBtn","height":92},"child":[{"type":"Image","props":{"y":0,"x":0,"width":93,"var":"fankuiDown","skin":"hall/btn/btnFankui_down.png","height":92}},{"type":"Image","props":{"y":25,"x":11,"width":70,"var":"fankuiNormal","skin":"hall/btn/btnFankui.png","height":42}}]},{"type":"Button","props":{"y":37,"x":469,"width":93,"var":"zhanjiBtn","height":92},"child":[{"type":"Image","props":{"y":0,"x":0,"width":93,"var":"zhanjiDown","skin":"hall/btn/btnZhanji_down.png","height":92}},{"type":"Image","props":{"y":25,"x":11,"width":70,"var":"zhanjiNormal","skin":"hall/btn/btnZhanji.png","height":42}}]}]}]};
+	BottomBtnUI.uiView={"type":"View","props":{"width":640,"height":120},"child":[{"type":"Tab","props":{"y":0,"x":0,"var":"btnTab","space":2,"skin":"hall/hallDi.png","selectedIndex":2,"labels":"商城,排行榜,大厅,反馈,战绩","labelSize":36,"labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","centerX":0,"bottom":0}}]};
 	return BottomBtnUI;
 })(View)
 
@@ -48857,7 +49408,7 @@ var HallBgUI=(function(_super){
 		this.createView(HallBgUI.uiView);
 	}
 
-	HallBgUI.uiView={"type":"View","props":{"width":640,"height":1038},"child":[{"type":"Rect","props":{"y":0,"x":0,"width":640,"lineWidth":1,"height":1038,"fillColor":"#024c71"}}]};
+	HallBgUI.uiView={"type":"View","props":{"width":640,"height":1038},"child":[{"type":"Rect","props":{"y":0,"x":0,"width":640,"lineWidth":1,"height":1038,"fillColor":"#007058"}}]};
 	return HallBgUI;
 })(View)
 
@@ -48935,8 +49486,7 @@ var HallViewUI=(function(_super){
 		this.handBtn=null;
 		this.handIMG=null;
 		this.nameTf=null;
-		this.idTf=null;
-		this.diamondTf=null;
+		this.lvTf=null;
 		this.coinTf=null;
 		this.creatXiZBtn=null;
 		this.creatSanDizhuBtn=null;
@@ -48945,6 +49495,10 @@ var HallViewUI=(function(_super){
 		this.creatPinshiBtn=null;
 		this.creatHHuaBtn=null;
 		this.joinRoomBtn=null;
+		this.gameTab=null;
+		this.jinbiBtn=null;
+		this.noSimbol=null;
+		this.yuejuBtn=null;
 		this.Notice=null;
 		HallViewUI.__super.call(this);
 	}
@@ -48958,7 +49512,7 @@ var HallViewUI=(function(_super){
 		this.createView(HallViewUI.uiView);
 	}
 
-	HallViewUI.uiView={"type":"View","props":{"x":0,"width":640,"rotation":0,"renderType":"mask","height":1038,"color":"#fdfdfd"},"child":[{"type":"Box","props":{"y":0,"x":0},"child":[{"type":"HallBg","props":{"runtime":"ui.hall.HallBgUI"}},{"type":"Box","props":{"x":1,"alpha":0.3},"child":[{"type":"Rect","props":{"width":640,"lineWidth":1,"height":90,"fillColor":"#000000"}}]},{"type":"Box","props":{"y":44,"x":15,"width":76,"var":"handBtn","height":76,"anchorY":0.5,"anchorX":0},"child":[{"type":"Box","props":{"y":-4,"x":-4,"alpha":0.3},"child":[{"type":"Circle","props":{"y":42,"x":42,"radius":42,"lineWidth":0,"lineColor":"#eeeeee","fillColor":"#eeeeee"}}]},{"type":"Box","props":{"y":1,"x":1,"width":74,"height":74,"anchorY":0,"anchorX":0},"child":[{"type":"Image","props":{"y":0,"x":0,"width":74,"var":"handIMG","skin":"common/morentouxiang2.png","height":74}},{"type":"Box","props":{"y":0,"x":0,"width":74,"renderType":"mask","height":74},"child":[{"type":"Circle","props":{"y":37,"x":37,"radius":37,"lineWidth":1,"fillColor":"#ff0000"}}]}]}]},{"type":"Box","props":{"y":11,"x":103},"child":[{"type":"Label","props":{"y":4,"x":4,"width":244,"var":"nameTf","text":"哇哈哈*胡文松","overflow":"hidden","height":32,"fontSize":26,"font":"SimHei","color":"#ffffff","align":"left"}},{"type":"Label","props":{"y":40,"x":7,"width":83,"var":"idTf","valign":"middle","text":"ID:1025","height":24,"fontSize":22,"font":"SimHei","color":"#ffffff","align":"left"}},{"type":"Image","props":{"y":37,"x":102,"skin":"hall/icon_diamond.png","scaleY":0.6,"scaleX":0.6}},{"type":"Label","props":{"y":40,"x":128,"width":82,"var":"diamondTf","valign":"middle","text":"1000000","height":24,"fontSize":22,"font":"SimHei","color":"#ffffff","align":"left"}},{"type":"Image","props":{"y":35,"x":209,"skin":"common/jinbi.png"}},{"type":"Label","props":{"y":40,"x":241,"width":90,"var":"coinTf","valign":"middle","text":51555956,"height":24,"fontSize":22,"font":"SimHei","color":"#ffffff","align":"left"}}]},{"type":"Panel","props":{"y":192,"x":15.5,"width":611,"vScrollBarSkin":" ","height":684},"child":[{"type":"Button","props":{"y":170,"x":328,"width":288,"visible":true,"var":"creatXiZBtn","stateNum":1,"skin":"hall/danchengGame.png","height":156}},{"type":"Button","props":{"x":325,"var":"creatSanDizhuBtn","stateNum":1,"skin":"hall/sanrendoudizhu.png"}},{"type":"Button","props":{"var":"creatSiDizhuBtn","stateNum":1,"skin":"hall/sirendoudizhu.png"}},{"type":"Button","props":{"y":170,"x":0,"width":282,"visible":true,"var":"creatXiSBtn","stateNum":1,"skin":"hall/xizhoumajiang.png","height":158}},{"type":"Button","props":{"y":340,"x":8,"visible":false,"var":"creatPinshiBtn","stateNum":1,"skin":"hall/pinshiGame.png"}},{"type":"Button","props":{"y":340,"x":336,"visible":false,"var":"creatHHuaBtn","stateNum":1,"skin":"hall/huaihuamj.png"}}]},{"type":"Image","props":{"y":169,"x":11,"width":620,"skin":"common/lanfengexian.png","height":2,"sizeGrid":"0,3,0,3"}},{"type":"Button","props":{"y":17,"x":460,"width":162,"var":"joinRoomBtn","stateNum":1,"skin":"hall/jionRoomBtn.png","labelSize":24,"labelFont":"SimHei","labelColors":"#0a426b,#0a426b,#0a426b","label":"加入房间","sizeGrid":"0,36,0,32"}},{"type":"Box","props":{"y":104,"x":0},"child":[{"type":"Box","props":{"width":640,"height":50},"child":[{"type":"Image","props":{"width":640,"skin":"common/madengBg.png","sizeGrid":"20,17,21,17"}}]},{"type":"Image","props":{"y":11,"x":35,"skin":"hall/laba.png","scaleY":0.8,"scaleX":0.8}},{"type":"Image","props":{"y":9,"x":79,"width":551,"skin":"common/labaBg.png","height":35,"sizeGrid":"12,10,16,14"}},{"type":"Text","props":{"y":13,"x":87,"width":528,"var":"Notice","text":"文字文字y","height":48,"fontSize":24,"font":"SimHei","color":"#ffffff"}}]}]}]};
+	HallViewUI.uiView={"type":"View","props":{"x":0,"width":640,"rotation":0,"renderType":"mask","height":1038,"color":"#fdfdfd"},"child":[{"type":"Box","props":{"y":0,"x":0},"child":[{"type":"HallBg","props":{"runtime":"ui.hall.HallBgUI"}},{"type":"Box","props":{"y":0,"x":0,"alpha":0.3},"child":[{"type":"Rect","props":{"width":640,"lineWidth":1,"height":110,"fillColor":"#000000"}}]},{"type":"Box","props":{"y":55,"x":15,"width":76,"var":"handBtn","height":76,"anchorY":0.5,"anchorX":0},"child":[{"type":"Box","props":{"y":-4,"x":-4,"alpha":0.3},"child":[{"type":"Circle","props":{"y":42,"x":42,"radius":42,"lineWidth":0,"lineColor":"#eeeeee","fillColor":"#eeeeee"}}]},{"type":"Box","props":{"y":1,"x":1,"width":74,"height":74,"anchorY":0,"anchorX":0},"child":[{"type":"Image","props":{"y":0,"x":0,"width":74,"var":"handIMG","skin":"common/morentouxiang2.png","height":74}},{"type":"Box","props":{"y":0,"x":0,"width":74,"renderType":"mask","height":74},"child":[{"type":"Circle","props":{"y":37,"x":37,"radius":37,"lineWidth":1,"fillColor":"#ff0000"}}]}]}]},{"type":"Label","props":{"y":15,"x":108,"width":177,"var":"nameTf","text":"哇哈哈*胡文松","overflow":"hidden","height":32,"fontSize":30,"font":"SimHei","color":"#ffffff","align":"left"}},{"type":"Label","props":{"y":35,"x":307,"var":"lvTf","valign":"middle","text":"大地主","fontSize":40,"font":"SimHei","color":"#c52e09","bold":true,"align":"left"}},{"type":"Image","props":{"y":50,"x":108,"width":46,"skin":"common/jinbi.png","height":46}},{"type":"Label","props":{"y":58,"x":154,"width":110,"var":"coinTf","valign":"middle","text":"100000","overflow":"hidden","height":31,"fontSize":30,"font":"SimHei","color":"#ffffff","align":"left"}},{"type":"Panel","props":{"y":192,"x":15.5,"width":611,"visible":false,"vScrollBarSkin":" ","height":684},"child":[{"type":"Button","props":{"y":170,"x":328,"width":288,"visible":true,"var":"creatXiZBtn","stateNum":1,"skin":"hall/danchengGame.png","height":156}},{"type":"Button","props":{"x":325,"var":"creatSanDizhuBtn","stateNum":1,"skin":"hall/sanrendoudizhu.png"}},{"type":"Button","props":{"var":"creatSiDizhuBtn","stateNum":1,"skin":"hall/sirendoudizhu.png"}},{"type":"Button","props":{"y":170,"x":0,"width":282,"visible":true,"var":"creatXiSBtn","stateNum":1,"skin":"hall/xizhoumajiang.png","height":158}},{"type":"Button","props":{"y":340,"x":8,"visible":false,"var":"creatPinshiBtn","stateNum":1,"skin":"hall/pinshiGame.png"}},{"type":"Button","props":{"y":340,"x":336,"visible":false,"var":"creatHHuaBtn","stateNum":1,"skin":"hall/huaihuamj.png"}}]},{"type":"Button","props":{"y":15,"x":444,"width":191,"var":"joinRoomBtn","stateNum":1,"skin":"hall/joinBtn.png","labelSize":36,"labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","label":"加入房间","height":80,"sizeGrid":"0,17,0,20"}},{"type":"Tab","props":{"y":174,"x":5,"var":"gameTab","space":5,"skin":"hall/gameBtn.png","selectedIndex":0,"labels":"三人斗地主,四人斗地主,拼十","labelSize":36,"labelPadding":"0,0,4,0","labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","direction":"vertical"}},{"type":"Button","props":{"y":174,"width":325,"var":"jinbiBtn","stateNum":1,"skin":"hall/jinbiBtn.png","right":30,"labelSize":36,"labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","label":"金币场","height":155,"sizeGrid":"17,18,19,19"},"child":[{"type":"Image","props":{"y":12,"x":184,"visible":false,"var":"noSimbol","skin":"hall/weikaifang.png"}}]},{"type":"Button","props":{"y":356,"width":325,"var":"yuejuBtn","stateNum":1,"skin":"hall/yuejuBtn.png","right":30,"labelSize":36,"labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","label":"约局场","height":155,"sizeGrid":"14,17,19,19"}},{"type":"Box","props":{"y":112,"x":0},"child":[{"type":"Image","props":{"y":0,"x":0,"width":640,"skin":"hall/paoBg.png","height":50,"alpha":0.3,"sizeGrid":"10,17,14,19"}},{"type":"Text","props":{"y":12,"x":11,"width":619,"var":"Notice","text":"文字文字y","height":33,"fontSize":24,"font":"SimHei","color":"#ffffff"}}]}]}]};
 	return HallViewUI;
 })(View)
 
@@ -49062,6 +49616,26 @@ var JoinRoomViewUI=(function(_super){
 
 	JoinRoomViewUI.uiView={"type":"View","props":{"width":640,"height":1038},"child":[{"type":"Box","props":{"rotation":0},"child":[{"type":"Box","props":{"y":0,"x":0,"var":"maskBtn","mouseThrough":true,"mouseEnabled":true,"alpha":0.5},"child":[{"type":"Rect","props":{"width":640,"lineWidth":0,"height":1038,"fillColor":"#000000"}}]},{"type":"Image","props":{"y":192,"x":70,"width":501,"skin":"common/popBg.png","sizeGrid":"20,20,20,20","mouseThrough":true,"mouseEnabled":true,"height":670}},{"type":"Image","props":{"y":158,"x":67,"width":508,"skin":"common/biaoti.png","height":86,"sizeGrid":"0,41,0,43"}},{"type":"Label","props":{"y":180,"x":220.5,"text":"输入房间号","overflow":"hidden","fontSize":40,"font":"SimHei","color":"#c7edfb"}},{"type":"Image","props":{"y":252,"x":92,"width":457,"skin":"common/diwen.png","height":571,"sizeGrid":"18,20,18,19"}},{"type":"Image","props":{"y":283,"x":156,"width":328,"skin":"common/madengBg.png","height":73,"sizeGrid":"20,17,21,17"}},{"type":"Label","props":{"y":293,"x":180,"width":281,"var":"roomidTf","text":123456,"overflow":"hidden","height":51,"fontSize":50,"font":"Helvetica","color":"#ffc757","align":"center"}},{"type":"Button","props":{"y":692,"x":117,"var":"clearBtn","stateNum":1,"skin":"common/btn_qc.png","labelStrokeColor":"#ff7001","labelStroke":3,"labelSize":40,"labelPadding":"0,0,5,0","labelFont":"SimHei","labelColors":"#ffffff,#ffffff,#ffffff","labelBold":true,"label":"清空"}},{"type":"Button","props":{"y":692,"x":389,"var":"joinBtn","stateNum":1,"skin":"common/btn_qr.png","labelStrokeColor":"#04b9ff","labelStroke":3,"labelSize":40,"labelPadding":"0,0,5,0","labelFont":"SimHei","labelColors":"#ffffff,#ffffff,#ffffff","labelBold":true,"label":"加入"}},{"type":"Button","props":{"y":372,"x":117,"var":"btn1","stateNum":1,"skin":"common/numBg.png","labelStrokeColor":"#0885f8","labelStroke":3,"labelSize":50,"labelPadding":"0,0,5,0","labelFont":"Helvetica","labelColors":"#ffffff,#ffffff,#ffffff","labelBold":true,"label":1,"sizeGrid":"0,54,0,59"}},{"type":"Button","props":{"y":586,"x":253,"var":"btn8","stateNum":1,"skin":"common/numBg.png","labelStrokeColor":"#0885f8","labelStroke":3,"labelSize":50,"labelPadding":"0,0,5,0","labelFont":"Helvetica","labelColors":"#ffffff,#ffffff,#ffffff","labelBold":true,"label":8,"sizeGrid":"0,54,0,59"}},{"type":"Button","props":{"y":372,"x":253,"var":"btn2","stateNum":1,"skin":"common/numBg.png","labelStrokeColor":"#0885f8","labelStroke":3,"labelSize":50,"labelPadding":"0,0,5,0","labelFont":"Helvetica","labelColors":"#ffffff,#ffffff,#ffffff","labelBold":true,"label":2,"sizeGrid":"0,54,0,59"}},{"type":"Button","props":{"y":479,"x":253,"var":"btn5","stateNum":1,"skin":"common/numBg.png","labelStrokeColor":"#0885f8","labelStroke":3,"labelSize":50,"labelPadding":"0,0,5,0","labelFont":"Helvetica","labelColors":"#ffffff,#ffffff,#ffffff","labelBold":true,"label":5,"sizeGrid":"0,54,0,59"}},{"type":"Button","props":{"y":479,"x":117,"var":"btn4","stateNum":1,"skin":"common/numBg.png","labelStrokeColor":"#0885f8","labelStroke":3,"labelSize":50,"labelPadding":"0,0,5,0","labelFont":"Helvetica","labelColors":"#ffffff,#ffffff,#ffffff","labelBold":true,"label":4,"sizeGrid":"0,54,0,59"}},{"type":"Button","props":{"y":479,"x":389,"var":"btn6","stateNum":1,"skin":"common/numBg.png","labelStrokeColor":"#0885f8","labelStroke":3,"labelSize":50,"labelPadding":"0,0,5,0","labelFont":"Helvetica","labelColors":"#ffffff,#ffffff,#ffffff","labelBold":true,"label":6,"sizeGrid":"0,54,0,59"}},{"type":"Button","props":{"y":586,"x":389,"var":"btn9","stateNum":1,"skin":"common/numBg.png","labelStrokeColor":"#0885f8","labelStroke":3,"labelSize":50,"labelPadding":"0,0,5,0","labelFont":"Helvetica","labelColors":"#ffffff,#ffffff,#ffffff","labelBold":true,"label":9,"sizeGrid":"0,54,0,59"}},{"type":"Button","props":{"y":372,"x":389,"var":"btn3","stateNum":1,"skin":"common/numBg.png","labelStrokeColor":"#0885f8","labelStroke":3,"labelSize":50,"labelPadding":"0,0,5,0","labelFont":"Helvetica","labelColors":"#ffffff,#ffffff,#ffffff","labelBold":true,"label":3,"sizeGrid":"0,54,0,59"}},{"type":"Button","props":{"y":586,"x":117,"var":"btn7","stateNum":1,"skin":"common/numBg.png","labelStrokeColor":"#0885f8","labelStroke":3,"labelSize":50,"labelPadding":"0,0,5,0","labelFont":"Helvetica","labelColors":"#ffffff,#ffffff,#ffffff","labelBold":true,"label":7,"sizeGrid":"0,54,0,59"}},{"type":"Button","props":{"y":693,"x":253,"var":"btn0","stateNum":1,"skin":"common/numBg.png","labelStrokeColor":"#0885f8","labelStroke":3,"labelSize":50,"labelPadding":"0,0,5,0","labelFont":"Helvetica","labelColors":"#ffffff,#ffffff,#ffffff","labelBold":true,"label":"0","height":98,"sizeGrid":"0,54,0,59"}}]}]};
 	return JoinRoomViewUI;
+})(View)
+
+
+//class ui.hall.RechargeViewUI extends laya.ui.View
+var RechargeViewUI=(function(_super){
+	function RechargeViewUI(){
+		this.rech_list=null;
+		RechargeViewUI.__super.call(this);
+	}
+
+	__class(RechargeViewUI,'ui.hall.RechargeViewUI',_super);
+	var __proto=RechargeViewUI.prototype;
+	__proto.createChildren=function(){
+		View.regComponent("ui.hall.HallBgUI",HallBgUI);
+		laya.ui.Component.prototype.createChildren.call(this);
+		this.createView(RechargeViewUI.uiView);
+	}
+
+	RechargeViewUI.uiView={"type":"View","props":{"y":0,"x":0,"width":640,"height":1038},"child":[{"type":"Box","props":{"y":0,"x":0},"child":[{"type":"HallBg","props":{"runtime":"ui.hall.HallBgUI"}},{"type":"Image","props":{"y":0,"x":5,"width":630,"skin":"common/diwenju.png","mouseThrough":true,"mouseEnabled":true,"height":1032,"sizeGrid":"28,16,30,20"}}]},{"type":"Box","props":{"y":0,"x":0}},{"type":"Label","props":{"y":30,"x":32,"width":580,"valign":"middle","text":"充值","height":50,"fontSize":40,"font":"SimHei","color":"#ffffff","align":"center"}},{"type":"Image","props":{"y":98,"x":20,"width":600,"skin":"common/diwen.png","height":791,"sizeGrid":"18,20,18,19"}},{"type":"List","props":{"y":113,"x":44,"width":549,"var":"rech_list","spaceY":7,"spaceX":10,"repeatX":2,"height":755},"child":[{"type":"Box","props":{"visible":true,"renderType":"render"},"child":[{"type":"Image","props":{"y":0,"x":0,"width":266,"visible":true,"skin":"common/diwen.png","height":250,"sizeGrid":"18,20,18,19"}},{"type":"Image","props":{"y":34.2,"x":236,"visible":true,"skin":"hall/icon_diamond.png","scaleY":0.4,"scaleX":0.4}},{"type":"Label","props":{"y":28,"x":121,"width":107,"visible":true,"valign":"middle","text":"1000","name":"Diamonds","height":34,"fontSize":34,"font":"SimHei","color":"#c7edfb","bold":true,"align":"right"}},{"type":"Label","props":{"y":136,"x":157,"width":103,"visible":true,"valign":"middle","text":"¥999元","name":"mon","height":24,"fontSize":24,"font":"SimHei","color":"#ffc757","align":"right"}},{"type":"Image","props":{"y":59,"x":1,"visible":true,"skin":"hall/type_3.png","name":"priceDis"}},{"type":"Button","props":{"y":171,"x":10,"width":250,"stateNum":1,"skin":"common/buttonLv.png","name":"recharge","labelStrokeColor":"#450100","labelStroke":2,"labelSize":42,"labelPadding":"0,0,4,0","labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","labelBold":true,"label":"购买","height":70,"sizeGrid":"0,29,0,27"}},{"type":"Image","props":{"y":-3,"x":-3,"skin":"common/top_line.png"}},{"type":"Image","props":{"y":2,"x":2,"skin":"common/tuijian.png"}},{"type":"Image","props":{"y":78,"x":113,"width":147,"skin":"common/wenziBg.png","height":34,"sizeGrid":"0,17,0,20"}},{"type":"Label","props":{"y":79,"x":154,"width":71,"visible":true,"valign":"middle","text":"50000","name":"dis","height":31,"fontSize":24,"font":"SimHei","color":"#c7edfb","align":"right"}},{"type":"Label","props":{"y":84.5,"x":118,"visible":true,"valign":"middle","text":"赠送","fontSize":20,"font":"SimHei","color":"#ff6431","align":"right"}},{"type":"Image","props":{"y":85,"x":230,"visible":true,"skin":"hall/icon_diamond.png","scaleY":0.4,"scaleX":0.4}},{"type":"Image","props":{"y":119,"x":114,"width":145,"visible":true,"skin":"common/fenge.png","height":2}}]}]},{"type":"Image","props":{"y":0,"x":5,"width":630,"skin":"common/biaoti.png","height":86,"sizeGrid":"0,41,0,43"}},{"type":"Image","props":{"y":19,"x":229.5,"skin":"hall/goumaibaoshi.png"}}]};
+	return RechargeViewUI;
 })(View)
 
 

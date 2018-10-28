@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":108,
+    "selecteID":109,
     "props":{"width":1038,"sceneColor":"#ffffff","height":640},
     "nodeParent":-1,
     "label":"View",
@@ -47,13 +47,14 @@
             "props":{"y":0,"x":0,"var":"pokerContainer"},
             "nodeParent":1,
             "label":"Box(pokerContainer)",
-            "isOpen":false,
+            "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":109,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "props":{"width":1038,"height":640},
                     "nodeParent":109,
@@ -83,7 +84,7 @@
             "compId":96,
             "child":[
                 ],
-            "$LOCKED":false,
+            "$LOCKED":true,
             "$HIDDEN":false
         },
         {
@@ -99,7 +100,7 @@
             "compId":97,
             "child":[
                 ],
-            "$LOCKED":false,
+            "$LOCKED":true,
             "$HIDDEN":false
         },
         {

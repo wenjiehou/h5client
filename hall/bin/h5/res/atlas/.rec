@@ -64,7 +64,6 @@ P 163E24EB jinbidiwen.png
 P AB1220C8 judiwen.png
 P CDF4A7E3 kaiguan.png
 P 6EEEF56F labaBg.png
-P 627A7860 lanfengexian.png
 P 08BD1864 loading.png
 P 2113BF44 lvBtn.png
 P 75BE8404 madengBg.png
@@ -194,8 +193,10 @@ P BCBCA67C danchengGame.png
 R 16274186 datingBtnBg.png
 P AE6102CF dianpao.png
 R E6B5DB2D duijuxq.png
+P CA624CE4 gameBtn.png
 P 120846FE goto.png
 R 8F74B6CA goumaibaoshi.png
+P AB9BDB75 hallDi.png
 R 43F272B5 hallItemBg.png
 P 80F229BC hallRank1.png
 P 4113C5FC hallRank2.png
@@ -206,7 +207,8 @@ P 4DEB6FD4 icon_diamond.png
 R 22714F1D img_buchang.png
 R BB27A3BF img_qiandao.png
 R 825F4793 jchuodong.png
-P C93B0B07 jionRoomBtn.png
+P 65F47FE8 jinbiBtn.png
+P 9B1E0A89 joinBtn.png
 P 517E0348 laba.png
 P 96D182CC lansedi.png
 P 48AA8D9F lansefengge.png
@@ -216,6 +218,7 @@ P 43B2E588 level2.png
 P 998F145D level3.png
 P 366A3D39 MVP_hall.png
 P 2FB1C6D4 numBg.png
+P B65D51F9 paoBg.png
 P 1C39A988 pinshiGame.png
 P BBEEB256 priceDis.png
 R 09C4BEA3 qiandao.png
@@ -231,9 +234,12 @@ P 9B25CA2E type_2.png
 P 0D9E372E type_3.png
 P 374F1A3B type_4.png
 P 2CF2CE91 type_5.png
+P E9D4C497 typeBtn.png
+P 6BDDCB6E weikaifang.png
 P F16AB930 xizhoumajiang.png
 P F3A63B24 yilemajiang.png
 P 09F335AF ying.png
+P B09518E4 yuejuBtn.png
 R A045D853 zhanjitj.png
 P A7F2FB73 zhaoshi.png
 P FAFB537D zhaosht.png

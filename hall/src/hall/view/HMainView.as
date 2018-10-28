@@ -3,7 +3,6 @@ package hall.view
 	import common.baseui.UIBase;
 	import common.event.EventCenter;
 	
-	import hall.HallModule;
 	import hall.controller.HallController;
 	
 	import laya.events.Event;
@@ -76,15 +75,6 @@ package hall.view
 			
 			EventCenter.instance.on(EventCenter.HALL_REFRESH_CARDSNUM,this,updataDiamond);
 			
-			//bannerView = new BannerView(_skin.banner);
-			
-//			_skin.goHref.on(Event.CLICK,this,function():void{
-//				//HallModule.instance.hallContext.hallView.hallLayer.recharge();
-//				
-//				Browser.window.location.href="http://mp.weixin.qq.com/s/eZRfZ-sBKLIEQqgX42N9iw";
-//				//Browser.window.location.href="http://game.bestpinzheng.com/wechat/activity/center"//"http://mp.weixin.qq.com/s/lmTqAOtYPl_GwUt_g1s3CQ";//"http://mp.weixin.qq.com/s/WYHVfyJwQxYV_ocym8wIyw";
-//			})
-			
 			this.updateUI();
 			
 			_skin.handBtn.on(Event.CLICK,this,function(e:Event):void{
@@ -100,30 +90,11 @@ package hall.view
 		}
 		
 		public function updataDiamond():void{
-			_skin.diamondTf.text = UserData.Diamond+"";
+			//_skin.diamondTf.text = UserData.Diamond+"";
 			_skin.coinTf.text = UserData.Coin + "";
 			trace(UserData.Diamond)
-//			if(UserData.Diamond/10 < 1){//一位数
-//				this._skin.chongzhiHBtn.x=60;
-//			}else if(UserData.Diamond/10 < 10){//两位数
-//				this._skin.chongzhiHBtn.x=65;
-//			}else if(UserData.Diamond/10 < 100){//三位数
-//				this._skin.chongzhiHBtn.x=75;
-//			}else if(UserData.Diamond/10 < 1000){//四位数
-//				this._skin.chongzhiHBtn.x=85;
-//			}else if(UserData.Diamond/10 < 10000){//五位数
-//				this._skin.chongzhiHBtn.x=95;
-//			}else if(UserData.Diamond/10 < 100000){//五位数
-//				this._skin.chongzhiHBtn.x=105;
-//			}else if(UserData.Diamond/10 < 1000000){//五位数
-//				this._skin.chongzhiHBtn.x=112;
-//			}else if(UserData.Diamond/10 < 10000000){//五位数
-//				this._skin.chongzhiHBtn.x=120;
-//			}else{
-//				this._skin.chongzhiHBtn.x=130;
-//			}
 			
-			_skin.idTf.text = "ID:" + UserData.uid;
+			//_skin.idTf.text = "ID:" + UserData.uid;
 		}
 		
 		public function updateUI():void
