@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":141,
-    "selecteID":265,
+    "selecteID":219,
     "props":{"x":0,"width":640,"sceneColor":"#000000","rotation":0,"renderType":"mask","height":1038,"color":"#fdfdfd"},
     "nodeParent":-1,
     "label":"View",
@@ -328,7 +328,7 @@
                 {
                     "x":30,
                     "type":"Tab",
-                    "props":{"y":174,"x":5,"var":"gameTab","space":5,"skin":"hall/gameBtn.png","selectedIndex":0,"labels":"三人斗地主,四人斗地主,拼十","labelSize":36,"labelPadding":"0,0,4,0","labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","direction":"vertical"},
+                    "props":{"y":174,"x":5,"var":"gameTab","space":5,"skin":"hall/gameBtn.png","selectedIndex":0,"labels":"三人斗地主,四人斗地主","labelSize":36,"labelPadding":"0,0,4,0","labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","direction":"vertical"},
                     "nodeParent":141,
                     "label":"Tab(gameTab)",
                     "isDirectory":false,
