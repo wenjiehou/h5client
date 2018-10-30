@@ -6,6 +6,7 @@ package hall.view
 	import hall.controller.HallController;
 	
 	import laya.events.Event;
+	import laya.utils.Handler;
 	
 	import ui.hall.HallViewUI;
 
@@ -65,6 +66,13 @@ package hall.view
 		
 		private function init():void
 		{
+			_skin.gameTab.selectedIndex = seleGameIdx;
+			
+			_skin.gameTab.selectHandler = Handler.create(this,onGameTabChange,null,false);
+			_skin.jinbiBtn.on(Event.CLICK,this,onClickJibiBtn);
+			_skin.yuejuBtn.on(Event.CLICK,this,onClickYuejuBtn);
+			
+			
 			_skin.creatXiSBtn.on(Event.CLICK,this,onClickCreatRoomBtn,[UserData.RoomType_Xiangshan]);//创建房间
 			_skin.creatXiZBtn.on(Event.CLICK,this,onClickCreatRoomBtn,[UserData.RoomType_Xizhou]);//创建房间
 			_skin.creatSanDizhuBtn.on(Event.CLICK,this,onClickCreatRoomBtn,[UserData.RoomType_SanDizhu]);
@@ -88,6 +96,27 @@ package hall.view
 //				e.stopPropagation();
 //			});
 		}
+		
+		protected var _seleGameIdx:int = 0
+			
+		public function get seleGameIdx():int{return QuickUtils.getLocalVar("seleGameIdx",_seleGameIdx);}
+		public function set seleGameIdx(value:int):void{QuickUtils.setLocalVar("seleGameIdx",value);}
+		
+		
+		protected function onGameTabChange(idx:int):void{
+			seleGameIdx = idx;
+			//todo
+		}
+		
+		protected function onClickJibiBtn(e:Event):void{
+			
+		}
+		
+		protected function onClickYuejuBtn(e:Event):void{
+			
+		}
+		
+		
 		
 		public function updataDiamond():void{
 			//_skin.diamondTf.text = UserData.Diamond+"";

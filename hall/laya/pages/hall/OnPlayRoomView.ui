@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":62,
+    "selecteID":71,
     "props":{"width":640,"sceneColor":"#000000","height":1038},
     "nodeParent":-1,
     "label":"View",
@@ -10,13 +10,6 @@
     "isDirectory":true,
     "isAniNode":true,
     "hasChild":true,
-    "frames":[
-        {
-            "type":1,
-            "props":{"width":640,"sceneColor":"#000000","height":1038},
-            "frame":0,
-            "__InPool":false
-        }],
     "compId":1,
     "child":[
         {
@@ -29,13 +22,6 @@
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":1,"x":-1,"width":642,"rotation":0,"height":1038},
-                    "frame":0,
-                    "__InPool":false
-                }],
             "compId":26,
             "child":[
                 {
@@ -48,13 +34,6 @@
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
-                    "frames":[
-                        {
-                            "type":1,
-                            "props":{"y":513,"x":283},
-                            "frame":0,
-                            "__InPool":false
-                        }],
                     "compId":67,
                     "child":[
                         ]
@@ -71,13 +50,6 @@
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":233,"x":0,"width":598,"skin":"common/gameBg.png","sizeGrid":"32,32,30,36","mouseThrough":true,"mouseEnabled":true,"height":375},
-                    "frame":0,
-                    "__InPool":false
-                }],
             "compId":70,
             "child":[
                 ],
@@ -94,13 +66,6 @@
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":104,"x":15},
-                    "frame":0,
-                    "__InPool":false
-                }],
             "compId":62,
             "child":[
                 {
@@ -112,13 +77,6 @@
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
-                    "frames":[
-                        {
-                            "type":1,
-                            "props":{"y":1,"width":82,"valign":"middle","text":"总牌局：","height":35,"fontSize":22,"font":"SimHei","color":"#729a9a","align":"left"},
-                            "frame":0,
-                            "__InPool":false
-                        }],
                     "compId":29,
                     "child":[
                         ],
@@ -133,13 +91,6 @@
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
-                    "frames":[
-                        {
-                            "type":1,
-                            "props":{"x":78,"width":36,"valign":"middle","text":"15","height":35,"fontSize":22,"font":"SimHei","color":"#d3fdf9","align":"center"},
-                            "frame":0,
-                            "__InPool":false
-                        }],
                     "compId":50,
                     "child":[
                         ],
@@ -154,13 +105,6 @@
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
-                    "frames":[
-                        {
-                            "type":1,
-                            "props":{"x":116,"width":39,"valign":"middle","text":"局","height":35,"fontSize":22,"font":"SimHei","color":"#729a9a","align":"left"},
-                            "frame":0,
-                            "__InPool":false
-                        }],
                     "compId":51,
                     "child":[
                         ],
@@ -177,13 +121,6 @@
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":140,"x":0,"width":640,"spaceY":-1,"height":683},
-                    "frame":0,
-                    "__InPool":false
-                }],
             "compId":64,
             "child":[
                 {
@@ -196,13 +133,6 @@
                     "isDirectory":true,
                     "isAniNode":false,
                     "hasChild":true,
-                    "frames":[
-                        {
-                            "type":1,
-                            "props":{"width":640,"var":"onplayBtn","renderType":"render","height":110},
-                            "frame":0,
-                            "__InPool":false
-                        }],
                     "compId":37,
                     "child":[
                         {
@@ -214,13 +144,6 @@
                             "isDirectory":false,
                             "isAniNode":false,
                             "hasChild":false,
-                            "frames":[
-                                {
-                                    "type":1,
-                                    "props":{"y":0,"x":0,"width":640,"skin":"hall/hallItemBg.png","sizeGrid":"8,8,8,8","height":110},
-                                    "frame":0,
-                                    "__InPool":false
-                                }],
                             "compId":38,
                             "child":[
                                 ]
@@ -234,13 +157,6 @@
                             "isDirectory":false,
                             "isAniNode":false,
                             "hasChild":false,
-                            "frames":[
-                                {
-                                    "type":1,
-                                    "props":{"y":5,"x":46,"width":117,"text":"象山麻将","height":29,"fontSize":28,"color":"#729a9a","bold":true},
-                                    "frame":0,
-                                    "__InPool":false
-                                }],
                             "compId":52,
                             "child":[
                                 ]
@@ -254,13 +170,6 @@
                             "isDirectory":false,
                             "isAniNode":false,
                             "hasChild":false,
-                            "frames":[
-                                {
-                                    "type":1,
-                                    "props":{"y":5,"x":163,"width":106,"text":"第13局","height":29,"fontSize":28,"color":"#ffffff"},
-                                    "frame":0,
-                                    "__InPool":false
-                                }],
                             "compId":56,
                             "child":[
                                 ]
@@ -275,13 +184,6 @@
                             "isDirectory":true,
                             "isAniNode":false,
                             "hasChild":true,
-                            "frames":[
-                                {
-                                    "type":1,
-                                    "props":{"y":41,"x":54,"width":76,"visible":true,"scaleY":0.8,"scaleX":0.8,"height":76,"anchorX":0},
-                                    "frame":0,
-                                    "__InPool":false
-                                }],
                             "compId":42,
                             "child":[
                                 {
@@ -293,13 +195,6 @@
                                     "isDirectory":true,
                                     "isAniNode":false,
                                     "hasChild":true,
-                                    "frames":[
-                                        {
-                                            "type":1,
-                                            "props":{"y":-3,"x":-3,"alpha":0.4},
-                                            "frame":0,
-                                            "__InPool":false
-                                        }],
                                     "compId":43,
                                     "child":[
                                         {
@@ -310,13 +205,6 @@
                                             "isDirectory":false,
                                             "isAniNode":false,
                                             "hasChild":false,
-                                            "frames":[
-                                                {
-                                                    "type":1,
-                                                    "props":{"y":40,"x":40,"visible":true,"radius":41,"lineWidth":1,"lineColor":"#ffffff","fillColor":"#ffffff"},
-                                                    "frame":0,
-                                                    "__InPool":false
-                                                }],
                                             "compId":44,
                                             "child":[
                                                 ],
@@ -333,13 +221,6 @@
                                     "isDirectory":true,
                                     "isAniNode":false,
                                     "hasChild":true,
-                                    "frames":[
-                                        {
-                                            "type":1,
-                                            "props":{"y":0,"x":0,"width":74,"visible":true,"height":74,"anchorY":0,"anchorX":0},
-                                            "frame":0,
-                                            "__InPool":false
-                                        }],
                                     "compId":45,
                                     "child":[
                                         {
@@ -350,13 +231,6 @@
                                             "isDirectory":false,
                                             "isAniNode":false,
                                             "hasChild":false,
-                                            "frames":[
-                                                {
-                                                    "type":1,
-                                                    "props":{"y":0,"x":0,"width":74,"visible":true,"skin":"common/morentouxiang.png","name":"headIMG","height":74,"anchorY":0},
-                                                    "frame":0,
-                                                    "__InPool":false
-                                                }],
                                             "compId":46,
                                             "child":[
                                                 ],
@@ -372,13 +246,6 @@
                                             "isDirectory":true,
                                             "isAniNode":false,
                                             "hasChild":true,
-                                            "frames":[
-                                                {
-                                                    "type":1,
-                                                    "props":{"y":0,"x":0,"width":74,"renderType":"mask","height":74},
-                                                    "frame":0,
-                                                    "__InPool":false
-                                                }],
                                             "compId":47,
                                             "child":[
                                                 {
@@ -389,13 +256,6 @@
                                                     "isDirectory":false,
                                                     "isAniNode":false,
                                                     "hasChild":false,
-                                                    "frames":[
-                                                        {
-                                                            "type":1,
-                                                            "props":{"y":37,"x":37,"radius":37,"fillColor":"#ff0000"},
-                                                            "frame":0,
-                                                            "__InPool":false
-                                                        }],
                                                     "compId":48,
                                                     "child":[
                                                         ]
@@ -417,13 +277,6 @@
                             "isDirectory":false,
                             "isAniNode":false,
                             "hasChild":false,
-                            "frames":[
-                                {
-                                    "type":1,
-                                    "props":{"y":56,"x":122,"width":132,"text":"哇哈哈哈哇哈哈哈","overflow":"hidden","height":37,"fontSize":26,"color":"#ffffff"},
-                                    "frame":0,
-                                    "__InPool":false
-                                }],
                             "compId":54,
                             "child":[
                                 ]
@@ -437,13 +290,6 @@
                             "isDirectory":false,
                             "isAniNode":false,
                             "hasChild":false,
-                            "frames":[
-                                {
-                                    "type":1,
-                                    "props":{"y":41,"x":488,"width":108,"valign":"middle","text":"33","name":"onplayScore","height":0,"fontSize":36,"font":"SimHei","color":"#f73d3d","bold":true,"align":"center"},
-                                    "frame":0,
-                                    "__InPool":false
-                                }],
                             "compId":61,
                             "child":[
                                 ]
@@ -458,13 +304,6 @@
                             "isDirectory":true,
                             "isAniNode":false,
                             "hasChild":true,
-                            "frames":[
-                                {
-                                    "type":1,
-                                    "props":{"y":24,"x":298},
-                                    "frame":0,
-                                    "__InPool":false
-                                }],
                             "compId":63,
                             "child":[
                                 {
@@ -475,13 +314,6 @@
                                     "isDirectory":false,
                                     "isAniNode":false,
                                     "hasChild":false,
-                                    "frames":[
-                                        {
-                                            "type":1,
-                                            "props":{"skin":"hall/timeIcon.png"},
-                                            "frame":0,
-                                            "__InPool":false
-                                        }],
                                     "compId":55,
                                     "child":[
                                         ]
@@ -494,13 +326,6 @@
                                     "isDirectory":false,
                                     "isAniNode":false,
                                     "hasChild":false,
-                                    "frames":[
-                                        {
-                                            "type":1,
-                                            "props":{"y":39,"skin":"hall/timeIcon.png"},
-                                            "frame":0,
-                                            "__InPool":false
-                                        }],
                                     "compId":57,
                                     "child":[
                                         ]
@@ -513,13 +338,6 @@
                                     "isDirectory":false,
                                     "isAniNode":false,
                                     "hasChild":false,
-                                    "frames":[
-                                        {
-                                            "type":1,
-                                            "props":{"x":34,"width":110,"valign":"middle","text":"22:22:38","height":23,"fontSize":20,"color":"#729a9a"},
-                                            "frame":0,
-                                            "__InPool":false
-                                        }],
                                     "compId":58,
                                     "child":[
                                         ]
@@ -532,13 +350,6 @@
                                     "isDirectory":false,
                                     "isAniNode":false,
                                     "hasChild":false,
-                                    "frames":[
-                                        {
-                                            "type":1,
-                                            "props":{"y":40,"x":34,"width":110,"valign":"middle","text":"22:22:38","height":23,"fontSize":20,"color":"#729a9a"},
-                                            "frame":0,
-                                            "__InPool":false
-                                        }],
                                     "compId":59,
                                     "child":[
                                         ]
@@ -553,13 +364,6 @@
                             "isDirectory":false,
                             "isAniNode":false,
                             "hasChild":false,
-                            "frames":[
-                                {
-                                    "type":1,
-                                    "props":{"y":43,"x":600,"skin":"hall/goto.png"},
-                                    "frame":0,
-                                    "__InPool":false
-                                }],
                             "compId":49,
                             "child":[
                                 ]
@@ -570,19 +374,12 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":805,"x":206,"width":243,"stateNum":1,"skin":"common/btnLv.png","labelSize":36,"labelFont":"SimHei","labelColors":"#ffffff","label":"查看总战绩","height":68},
+            "props":{"y":805,"x":206,"width":243,"stateNum":1,"skin":"common/buttonLv.png","labelSize":36,"labelFont":"SimHei","labelColors":"#ffffff","label":"查看总战绩","height":68},
             "nodeParent":1,
             "label":"Button",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":849,"x":206,"width":243,"stateNum":1,"skin":"common/lvBtn.png","sizeGrid":"0,36,0,36","labelSize":36,"labelFont":"SimHei","labelColors":"#ffffff","label":"查看总战绩","height":68},
-                    "frame":0,
-                    "__InPool":false
-                }],
             "compId":65,
             "child":[
                 ]
@@ -596,13 +393,6 @@
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
-            "frames":[
-                {
-                    "type":1,
-                    "props":{"y":30,"x":30,"width":580,"valign":"middle","text":"战绩统计","height":50,"fontSize":28,"font":"SimHei","color":"#6dc3a8","align":"center"},
-                    "frame":0,
-                    "__InPool":false
-                }],
             "compId":68,
             "child":[
                 ]

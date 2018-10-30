@@ -12,18 +12,18 @@ Project configuration:d:\mywork\client\hall/.actionScriptProperties.
 1,0.00,d:/mywork/client/hall/src,0,Collect
 1,0.00,d:/mywork/client/hall/libs/laya/src,0,Collect
 1,2.00,,0,read class message
-1,89.90,,0,Disable Flash3D d:/mywork/client/hall/src/Main.as
-12,89.90,d:/mywork/client/hall/bin/h5/Main.max.js,1636767,
-12,89.90,d:/mywork/client/hall/bin/h5/js/nnGame.js,149394,
-12,89.90,d:/mywork/client/hall/bin/h5/js/game.js,373014,
-12,89.90,d:/mywork/client/hall/bin/h5/js/sddzGame.js,187237,
-12,89.90,d:/mywork/client/hall/bin/h5/js/xizhouGame.js,3747,
-12,89.90,d:/mywork/client/hall/bin/h5/js/niuniuGameUI.js,30133,
-12,89.90,d:/mywork/client/hall/bin/h5/js/xiangshanGame.js,14976,
-12,89.90,d:/mywork/client/hall/bin/h5/js/srddzGame.js,206986,
-12,89.90,d:/mywork/client/hall/bin/h5/js/mjGameUI.js,122134,
-12,89.90,d:/mywork/client/hall/bin/h5/js/srddzGameUI.js,70264,
-12,89.90,d:/mywork/client/hall/bin/h5/js/sddzGameUI.js,49452,
-11,89.90,d:/mywork/client/hall/bin/h5/Main.max.html,791,
+1,89.74,,0,Disable Flash3D d:/mywork/client/hall/src/Main.as
+12,89.74,d:/mywork/client/hall/bin/h5/Main.max.js,1637114,
+12,89.74,d:/mywork/client/hall/bin/h5/js/nnGame.js,149394,
+12,89.74,d:/mywork/client/hall/bin/h5/js/game.js,373014,
+12,89.74,d:/mywork/client/hall/bin/h5/js/sddzGame.js,187237,
+12,89.74,d:/mywork/client/hall/bin/h5/js/xizhouGame.js,3747,
+12,89.74,d:/mywork/client/hall/bin/h5/js/niuniuGameUI.js,30133,
+12,89.74,d:/mywork/client/hall/bin/h5/js/xiangshanGame.js,14976,
+12,89.74,d:/mywork/client/hall/bin/h5/js/srddzGame.js,206986,
+12,89.74,d:/mywork/client/hall/bin/h5/js/mjGameUI.js,122134,
+12,89.74,d:/mywork/client/hall/bin/h5/js/srddzGameUI.js,70264,
+12,89.74,d:/mywork/client/hall/bin/h5/js/sddzGameUI.js,49452,
+11,89.74,d:/mywork/client/hall/bin/h5/Main.max.html,791,
 ******************************************************************************
-14,89.90,,0,
+14,89.74,,0,

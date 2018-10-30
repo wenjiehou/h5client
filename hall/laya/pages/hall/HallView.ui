@@ -160,7 +160,7 @@
                 {
                     "x":30,
                     "type":"Label",
-                    "props":{"y":15,"x":108,"width":177,"var":"nameTf","text":"哇哈哈*胡文松","styleSkin":"hall/5x10label.png","overflow":"hidden","height":32,"fontSize":30,"font":"SimHei","color":"#ffffff","align":"left"},
+                    "props":{"y":15,"x":106,"width":177,"var":"nameTf","text":"哇哈哈*胡文松","styleSkin":"hall/5x10label.png","overflow":"hidden","height":32,"fontSize":30,"font":"SimHei","color":"#ffffff","align":"left"},
                     "nodeParent":141,
                     "label":"Label(nameTf)",
                     "isDirectory":false,
@@ -173,22 +173,8 @@
                 },
                 {
                     "x":30,
-                    "type":"Label",
-                    "props":{"y":35,"x":307,"var":"lvTf","valign":"middle","text":"大地主","styleSkin":"hall/5x10label.png","fontSize":40,"font":"SimHei","color":"#c52e09","bold":true,"align":"left"},
-                    "nodeParent":141,
-                    "label":"Label(lvTf)",
-                    "isDirectory":false,
-                    "isAniNode":true,
-                    "hasChild":false,
-                    "compId":210,
-                    "child":[
-                        ],
-                    "$HIDDEN":false
-                },
-                {
-                    "x":30,
                     "type":"Image",
-                    "props":{"y":50,"x":108,"width":46,"skin":"common/jinbi.png","height":46},
+                    "props":{"y":32,"x":284,"width":46,"skin":"common/jinbi.png","height":46},
                     "nodeParent":141,
                     "label":"Image",
                     "isDirectory":false,
@@ -201,7 +187,7 @@
                 {
                     "x":30,
                     "type":"Label",
-                    "props":{"y":58,"x":154,"width":110,"var":"coinTf","valign":"middle","text":"100000","styleSkin":"hall/5x10label.png","overflow":"hidden","height":31,"fontSize":30,"font":"SimHei","color":"#ffffff","align":"left"},
+                    "props":{"y":39,"x":331,"width":109,"var":"coinTf","valign":"middle","text":"100000","styleSkin":"hall/5x10label.png","overflow":"hidden","height":31,"fontSize":36,"font":"SimHei","color":"#ffffff","align":"left"},
                     "nodeParent":141,
                     "label":"Label(coinTf)",
                     "isDirectory":false,
@@ -328,7 +314,7 @@
                 {
                     "x":30,
                     "type":"Tab",
-                    "props":{"y":174,"x":5,"var":"gameTab","space":5,"skin":"hall/gameBtn.png","selectedIndex":0,"labels":"三人斗地主,四人斗地主","labelSize":36,"labelPadding":"0,0,4,0","labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","direction":"vertical"},
+                    "props":{"y":174,"x":5,"var":"gameTab","space":5,"skin":"hall/gameBtn.png","selectedIndex":0,"labels":"三人斗地主,四人斗地主,拼十","labelSize":36,"labelPadding":"0,0,4,0","labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","direction":"vertical"},
                     "nodeParent":141,
                     "label":"Tab(gameTab)",
                     "isDirectory":false,
@@ -419,6 +405,19 @@
                                 ],
                             "$HIDDEN":false
                         }]
+                },
+                {
+                    "x":30,
+                    "type":"Image",
+                    "props":{"y":56,"x":106,"skin":"common/nv_9.png","scaleY":1.5,"scaleX":1.5},
+                    "nodeParent":141,
+                    "label":"Image",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":264,
+                    "child":[
+                        ]
                 }],
             "$HIDDEN":false
         }],

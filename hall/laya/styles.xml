@@ -224,4 +224,5 @@
    <item name="hall/hallDi.png" type="Tab" compress="0" pack="0" quality="80" props="" picType="0" scale="0"/>
    <item name="hall/backBtn.png" type="Button" compress="0" pack="0" quality="80" props="" picType="0" scale="0"/>
    <item name="hall/listBg.png" type="Image" compress="0" pack="0" quality="80" props="sizeGrid=11,12,14,13" picType="0" scale="0"/>
+   <item name="common/playerBg.png" type="Button" compress="0" pack="0" quality="80" props="" picType="0" scale="0"/>
 </res>

@@ -23608,6 +23608,8 @@ var HMainView=(function(_super){
 		this._joinRoomView=null;
 		this._creatRoomView=null;
 		this._hallHandInfoView=null;
+		// });
+		this._seleGameIdx=0
 		HMainView.__super.call(this);
 		this.skinRes="";
 		this._joinRoomView=new JoinRView();
@@ -23644,6 +23646,8 @@ var HMainView=(function(_super){
 	}
 
 	__proto.init=function(){
+		this._skin.gameTab.selectedIndex=this.seleGameIdx;
+		this._skin.gameTab.selectHandler=Handler.create(this,this.onGameTabChange,null,false);
 		this._skin.creatXiSBtn.on("click",this,this.onClickCreatRoomBtn,[3010]);
 		this._skin.creatXiZBtn.on("click",this,this.onClickCreatRoomBtn,[3000]);
 		this._skin.creatSanDizhuBtn.on("click",this,this.onClickCreatRoomBtn,[4000]);
@@ -23659,7 +23663,10 @@ var HMainView=(function(_super){
 		});
 	}
 
-	// });
+	__proto.onGameTabChange=function(idx){
+		this.seleGameIdx=idx;
+	}
+
 	__proto.updataDiamond=function(){
 		this._skin.coinTf.text=UserData.Coin+"";
 		console.log(UserData.Diamond)
@@ -23710,6 +23717,7 @@ var HMainView=(function(_super){
 		e.stopPropagation();
 	}
 
+	__getset(0,__proto,'seleGameIdx',function(){return QuickUtils.getLocalVar("seleGameIdx",this._seleGameIdx);},function(value){QuickUtils.setLocalVar("seleGameIdx",value);});
 	return HMainView;
 })(UIBase)
 
@@ -23773,6 +23781,64 @@ var HServiceView=(function(_super){
 	}
 
 	return HServiceView;
+})(UIBase)
+
+
+//class hall.view.HShareView extends common.baseui.UIBase
+var HShareView=(function(_super){
+	function HShareView(container){
+		this._skin=null;
+		this.caller=null;
+		this.timeLine=new TimeLine();
+		HShareView.__super.call(this,container);
+		this._skin=new HallShareViewUI();
+		this._skin.mouseEnabled=true;
+		this.timeLine.to(this._skin.TipHand,{y:100},600,Ease.quadIn).to(this._skin.TipHand,{y:150},600,Ease.quadOut);
+		this.timeLine.play(0,true);
+		this.timeLine.pause();
+	}
+
+	__class(HShareView,'hall.view.HShareView',_super);
+	var __proto=HShareView.prototype;
+	__proto.onLoaded=function(){
+		console.log('rechargeView.atlas')
+		_super.prototype.onLoaded.call(this);
+		if(this._isShow){
+			this.timeLine.resume();
+			this.container.addChild(this._skin);
+		}
+		this.init();
+	}
+
+	__proto.init=function(){
+		var _$this=this;
+		this._skin.ShareMask.on("click",this,function(){
+			_$this.hide();
+			if(this.caller){
+				this.caller();
+			}
+		});
+	}
+
+	//返回大厅
+	__proto.show=function(){
+		_super.prototype.show.call(this);
+		if(this._skin){
+			this._skin.TipHand.y=150;
+			UIManager.instance.uiCommonLayer.addChild(this._skin);
+			this.timeLine.resume();
+		}
+	}
+
+	__proto.hide=function(){
+		_super.prototype.hide.call(this);
+		if(this._skin && this._skin.parent){
+			this.timeLine.pause();
+			this._skin.parent.removeChild(this._skin);
+		}
+	}
+
+	return HShareView;
 })(UIBase)
 
 
@@ -23902,64 +23968,6 @@ var HallController=(function(_super){
 	HallController.HallMainNoticeTxt="";
 	return HallController;
 })(AbstractLayer)
-
-
-//class hall.view.HShareView extends common.baseui.UIBase
-var HShareView=(function(_super){
-	function HShareView(container){
-		this._skin=null;
-		this.caller=null;
-		this.timeLine=new TimeLine();
-		HShareView.__super.call(this,container);
-		this._skin=new HallShareViewUI();
-		this._skin.mouseEnabled=true;
-		this.timeLine.to(this._skin.TipHand,{y:100},600,Ease.quadIn).to(this._skin.TipHand,{y:150},600,Ease.quadOut);
-		this.timeLine.play(0,true);
-		this.timeLine.pause();
-	}
-
-	__class(HShareView,'hall.view.HShareView',_super);
-	var __proto=HShareView.prototype;
-	__proto.onLoaded=function(){
-		console.log('rechargeView.atlas')
-		_super.prototype.onLoaded.call(this);
-		if(this._isShow){
-			this.timeLine.resume();
-			this.container.addChild(this._skin);
-		}
-		this.init();
-	}
-
-	__proto.init=function(){
-		var _$this=this;
-		this._skin.ShareMask.on("click",this,function(){
-			_$this.hide();
-			if(this.caller){
-				this.caller();
-			}
-		});
-	}
-
-	//返回大厅
-	__proto.show=function(){
-		_super.prototype.show.call(this);
-		if(this._skin){
-			this._skin.TipHand.y=150;
-			UIManager.instance.uiCommonLayer.addChild(this._skin);
-			this.timeLine.resume();
-		}
-	}
-
-	__proto.hide=function(){
-		_super.prototype.hide.call(this);
-		if(this._skin && this._skin.parent){
-			this.timeLine.pause();
-			this._skin.parent.removeChild(this._skin);
-		}
-	}
-
-	return HShareView;
-})(UIBase)
 
 
 //class hall.model.HallModel extends rb.framework.mvc.AbstractLayer
@@ -49315,7 +49323,7 @@ var BottomBtnUI=(function(_super){
 		this.createView(BottomBtnUI.uiView);
 	}
 
-	BottomBtnUI.uiView={"type":"View","props":{"width":640,"height":120},"child":[{"type":"Tab","props":{"y":0,"x":0,"var":"btnTab","space":2,"skin":"hall/hallDi.png","selectedIndex":2,"labels":"商城,排行榜,大厅,反馈,战绩","labelSize":36,"labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","centerX":0,"bottom":0}}]};
+	BottomBtnUI.uiView={"type":"View","props":{"width":640,"height":120},"child":[{"type":"Tab","props":{"y":0,"x":0,"var":"btnTab","space":2,"skin":"hall/hallDi.png","selectedIndex":2,"labels":"商城,排行榜,大厅,反馈,战绩","labelSize":36,"labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","direction":"horizontal","centerX":0,"bottom":0}}]};
 	return BottomBtnUI;
 })(View)
 
@@ -49486,7 +49494,6 @@ var HallViewUI=(function(_super){
 		this.handBtn=null;
 		this.handIMG=null;
 		this.nameTf=null;
-		this.lvTf=null;
 		this.coinTf=null;
 		this.creatXiZBtn=null;
 		this.creatSanDizhuBtn=null;
@@ -49512,7 +49519,7 @@ var HallViewUI=(function(_super){
 		this.createView(HallViewUI.uiView);
 	}
 
-	HallViewUI.uiView={"type":"View","props":{"x":0,"width":640,"rotation":0,"renderType":"mask","height":1038,"color":"#fdfdfd"},"child":[{"type":"Box","props":{"y":0,"x":0},"child":[{"type":"HallBg","props":{"runtime":"ui.hall.HallBgUI"}},{"type":"Box","props":{"y":0,"x":0,"alpha":0.3},"child":[{"type":"Rect","props":{"width":640,"lineWidth":1,"height":110,"fillColor":"#000000"}}]},{"type":"Box","props":{"y":55,"x":15,"width":76,"var":"handBtn","height":76,"anchorY":0.5,"anchorX":0},"child":[{"type":"Box","props":{"y":-4,"x":-4,"alpha":0.3},"child":[{"type":"Circle","props":{"y":42,"x":42,"radius":42,"lineWidth":0,"lineColor":"#eeeeee","fillColor":"#eeeeee"}}]},{"type":"Box","props":{"y":1,"x":1,"width":74,"height":74,"anchorY":0,"anchorX":0},"child":[{"type":"Image","props":{"y":0,"x":0,"width":74,"var":"handIMG","skin":"common/morentouxiang2.png","height":74}},{"type":"Box","props":{"y":0,"x":0,"width":74,"renderType":"mask","height":74},"child":[{"type":"Circle","props":{"y":37,"x":37,"radius":37,"lineWidth":1,"fillColor":"#ff0000"}}]}]}]},{"type":"Label","props":{"y":15,"x":108,"width":177,"var":"nameTf","text":"哇哈哈*胡文松","overflow":"hidden","height":32,"fontSize":30,"font":"SimHei","color":"#ffffff","align":"left"}},{"type":"Label","props":{"y":35,"x":307,"var":"lvTf","valign":"middle","text":"大地主","fontSize":40,"font":"SimHei","color":"#c52e09","bold":true,"align":"left"}},{"type":"Image","props":{"y":50,"x":108,"width":46,"skin":"common/jinbi.png","height":46}},{"type":"Label","props":{"y":58,"x":154,"width":110,"var":"coinTf","valign":"middle","text":"100000","overflow":"hidden","height":31,"fontSize":30,"font":"SimHei","color":"#ffffff","align":"left"}},{"type":"Panel","props":{"y":192,"x":15.5,"width":611,"visible":false,"vScrollBarSkin":" ","height":684},"child":[{"type":"Button","props":{"y":170,"x":328,"width":288,"visible":true,"var":"creatXiZBtn","stateNum":1,"skin":"hall/danchengGame.png","height":156}},{"type":"Button","props":{"x":325,"var":"creatSanDizhuBtn","stateNum":1,"skin":"hall/sanrendoudizhu.png"}},{"type":"Button","props":{"var":"creatSiDizhuBtn","stateNum":1,"skin":"hall/sirendoudizhu.png"}},{"type":"Button","props":{"y":170,"x":0,"width":282,"visible":true,"var":"creatXiSBtn","stateNum":1,"skin":"hall/xizhoumajiang.png","height":158}},{"type":"Button","props":{"y":340,"x":8,"visible":false,"var":"creatPinshiBtn","stateNum":1,"skin":"hall/pinshiGame.png"}},{"type":"Button","props":{"y":340,"x":336,"visible":false,"var":"creatHHuaBtn","stateNum":1,"skin":"hall/huaihuamj.png"}}]},{"type":"Button","props":{"y":15,"x":444,"width":191,"var":"joinRoomBtn","stateNum":1,"skin":"hall/joinBtn.png","labelSize":36,"labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","label":"加入房间","height":80,"sizeGrid":"0,17,0,20"}},{"type":"Tab","props":{"y":174,"x":5,"var":"gameTab","space":5,"skin":"hall/gameBtn.png","selectedIndex":0,"labels":"三人斗地主,四人斗地主,拼十","labelSize":36,"labelPadding":"0,0,4,0","labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","direction":"vertical"}},{"type":"Button","props":{"y":174,"width":325,"var":"jinbiBtn","stateNum":1,"skin":"hall/jinbiBtn.png","right":30,"labelSize":36,"labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","label":"金币场","height":155,"sizeGrid":"17,18,19,19"},"child":[{"type":"Image","props":{"y":12,"x":184,"visible":false,"var":"noSimbol","skin":"hall/weikaifang.png"}}]},{"type":"Button","props":{"y":356,"width":325,"var":"yuejuBtn","stateNum":1,"skin":"hall/yuejuBtn.png","right":30,"labelSize":36,"labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","label":"约局场","height":155,"sizeGrid":"14,17,19,19"}},{"type":"Box","props":{"y":112,"x":0},"child":[{"type":"Image","props":{"y":0,"x":0,"width":640,"skin":"hall/paoBg.png","height":50,"alpha":0.3,"sizeGrid":"10,17,14,19"}},{"type":"Text","props":{"y":12,"x":11,"width":619,"var":"Notice","text":"文字文字y","height":33,"fontSize":24,"font":"SimHei","color":"#ffffff"}}]}]}]};
+	HallViewUI.uiView={"type":"View","props":{"x":0,"width":640,"rotation":0,"renderType":"mask","height":1038,"color":"#fdfdfd"},"child":[{"type":"Box","props":{"y":0,"x":0},"child":[{"type":"HallBg","props":{"runtime":"ui.hall.HallBgUI"}},{"type":"Box","props":{"y":0,"x":0,"alpha":0.3},"child":[{"type":"Rect","props":{"width":640,"lineWidth":1,"height":110,"fillColor":"#000000"}}]},{"type":"Box","props":{"y":55,"x":15,"width":76,"var":"handBtn","height":76,"anchorY":0.5,"anchorX":0},"child":[{"type":"Box","props":{"y":-4,"x":-4,"alpha":0.3},"child":[{"type":"Circle","props":{"y":42,"x":42,"radius":42,"lineWidth":0,"lineColor":"#eeeeee","fillColor":"#eeeeee"}}]},{"type":"Box","props":{"y":1,"x":1,"width":74,"height":74,"anchorY":0,"anchorX":0},"child":[{"type":"Image","props":{"y":0,"x":0,"width":74,"var":"handIMG","skin":"common/morentouxiang2.png","height":74}},{"type":"Box","props":{"y":0,"x":0,"width":74,"renderType":"mask","height":74},"child":[{"type":"Circle","props":{"y":37,"x":37,"radius":37,"lineWidth":1,"fillColor":"#ff0000"}}]}]}]},{"type":"Label","props":{"y":15,"x":106,"width":177,"var":"nameTf","text":"哇哈哈*胡文松","overflow":"hidden","height":32,"fontSize":30,"font":"SimHei","color":"#ffffff","align":"left"}},{"type":"Image","props":{"y":32,"x":284,"width":46,"skin":"common/jinbi.png","height":46}},{"type":"Label","props":{"y":39,"x":331,"width":109,"var":"coinTf","valign":"middle","text":"100000","overflow":"hidden","height":31,"fontSize":36,"font":"SimHei","color":"#ffffff","align":"left"}},{"type":"Panel","props":{"y":192,"x":15.5,"width":611,"visible":false,"vScrollBarSkin":" ","height":684},"child":[{"type":"Button","props":{"y":170,"x":328,"width":288,"visible":true,"var":"creatXiZBtn","stateNum":1,"skin":"hall/danchengGame.png","height":156}},{"type":"Button","props":{"x":325,"var":"creatSanDizhuBtn","stateNum":1,"skin":"hall/sanrendoudizhu.png"}},{"type":"Button","props":{"var":"creatSiDizhuBtn","stateNum":1,"skin":"hall/sirendoudizhu.png"}},{"type":"Button","props":{"y":170,"x":0,"width":282,"visible":true,"var":"creatXiSBtn","stateNum":1,"skin":"hall/xizhoumajiang.png","height":158}},{"type":"Button","props":{"y":340,"x":8,"visible":false,"var":"creatPinshiBtn","stateNum":1,"skin":"hall/pinshiGame.png"}},{"type":"Button","props":{"y":340,"x":336,"visible":false,"var":"creatHHuaBtn","stateNum":1,"skin":"hall/huaihuamj.png"}}]},{"type":"Button","props":{"y":15,"x":444,"width":191,"var":"joinRoomBtn","stateNum":1,"skin":"hall/joinBtn.png","labelSize":36,"labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","label":"加入房间","height":80,"sizeGrid":"0,17,0,20"}},{"type":"Tab","props":{"y":174,"x":5,"var":"gameTab","space":5,"skin":"hall/gameBtn.png","selectedIndex":0,"labels":"三人斗地主,四人斗地主,拼十","labelSize":36,"labelPadding":"0,0,4,0","labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","direction":"vertical"}},{"type":"Button","props":{"y":174,"width":325,"var":"jinbiBtn","stateNum":1,"skin":"hall/jinbiBtn.png","right":30,"labelSize":36,"labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","label":"金币场","height":155,"sizeGrid":"17,18,19,19"},"child":[{"type":"Image","props":{"y":12,"x":184,"visible":false,"var":"noSimbol","skin":"hall/weikaifang.png"}}]},{"type":"Button","props":{"y":356,"width":325,"var":"yuejuBtn","stateNum":1,"skin":"hall/yuejuBtn.png","right":30,"labelSize":36,"labelFont":"SimHei","labelColors":"#e7fecb,#e7fecb,#e7fecb,#e7fecb","label":"约局场","height":155,"sizeGrid":"14,17,19,19"}},{"type":"Box","props":{"y":112,"x":0},"child":[{"type":"Image","props":{"y":0,"x":0,"width":640,"skin":"hall/paoBg.png","height":50,"alpha":0.3,"sizeGrid":"10,17,14,19"}},{"type":"Text","props":{"y":12,"x":11,"width":619,"var":"Notice","text":"文字文字y","height":33,"fontSize":24,"font":"SimHei","color":"#ffffff"}}]},{"type":"Image","props":{"y":56,"x":106,"skin":"common/nv_9.png","scaleY":1.5,"scaleX":1.5}}]}]};
 	return HallViewUI;
 })(View)
 
@@ -50939,7 +50946,7 @@ var HallContext=(function(_super){
 })(GameContext)
 
 
-	Laya.__init([EventDispatcher,UIManager,LoadingManager,DependencyCollectionChangeEvent,View,BaseTool,SoundPlay,TimeLine,LocalStorage,Pomelo,TimeManager,TextManager,Timer,LoaderManager,UserData,EventCenter,Browser,Render,GraphicAnimation,AtlasGrid,WebGLContext2D,DrawText,ShaderCompile]);
+	Laya.__init([EventDispatcher,UIManager,LoadingManager,DependencyCollectionChangeEvent,View,BaseTool,SoundPlay,TimeLine,LocalStorage,Pomelo,TimeManager,TextManager,Timer,LoaderManager,EventCenter,UserData,Browser,Render,GraphicAnimation,AtlasGrid,WebGLContext2D,DrawText,ShaderCompile]);
 	/**LayaGameStart**/
 	new Main();
 
